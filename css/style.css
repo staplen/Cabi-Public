@@ -1,0 +1,317 @@
+/*
+* MAIN STYLESHEET
+*
+* Main Stylesheet built on Bootstrap by Twitter, 
+* relies on bootstrap.css and bootstrap-responsive.css 
+*
+* @author: Nico Staple
+* @email: nico@getmighty.com
+*
+*
+*/
+
+
+	
+/*
+| 
+| DEFAULTS & GLOBALS
+|
+#####################################################*/
+
+/* Common utilities 
+---------------------------- */
+.offscreen { 
+	left: -3000px; 
+	position: absolute; 
+}
+
+* {
+	font-family: "proxima-nova";
+}
+
+/*
+| 
+| PAGE FORMATTING
+|
+#####################################################*/
+
+/* Page formatting
+---------------------------- */
+#geolocation-error {
+	display: none;
+}
+#geolocation-error {
+	padding: 35px;
+}
+#content #loading {
+	text-align: center;
+	padding-top: 20px;
+}
+
+.overlay-btn {
+	position: fixed;
+	padding: 20px;
+	background: #000;
+	background: rgba(0,0,0,0.6);
+	color: #fff;
+	font-size: 20px;
+	line-height: 20px;
+	z-index: 1000;
+}
+.overlay-btn:hover {
+	background: #000;
+	background: rgba(0,0,0,1.0);
+	color: #fff;
+	text-decoration: none;
+}
+
+.reload-trigger {
+	top: 0;
+	right: 0;
+}
+
+
+/*
+| 
+| STATION LISTING
+|
+#####################################################*/
+#stations-list-container {
+	padding: 0 20px;
+}
+#station-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+#station-list .station-item {
+	border-bottom: 1px solid #000;
+	/*border-bottom-color: rgba(0,0,0,0.6);*/
+	padding: 15px 0;
+	position: relative;
+}
+#station-list .station-item a {
+	color: #000;
+	color: rgba(0,0,0,0.7);
+	display: block;
+	font-size: 20px;
+	font-weight: 400;
+	line-height: 30px;
+}
+#station-list .station-item a svg {
+	height: 20px;
+	width: 20px;
+}
+#station-list .station-item a:hover {
+	color: rgba(0,0,0,1);
+	text-decoration: none;
+}
+#station-list .station-item span.distance, #station-list .station-item span.time {
+	background: rgba(0,0,0,0.4);
+	border-radius: 2px;
+	color: #fff;
+	font-size: 16px;
+	font-weight: 100;
+	padding: 0 2px;
+	text-transform: uppercase;
+}
+#station-list .station-item .progress {
+	margin-bottom: 0;
+}
+#station-list .station-item .progress .progress-bar img {
+	height: 100%;
+	width: 100%;
+	margin-top: -12px;
+}
+#station-list .station-item .progress .progress-bar {
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+#station-list .station-item .progress .progress-bar i {
+	color: #000;
+	display: block;
+	font-size: 16px;
+	margin-top: 2px;
+}
+#station-list .station-item .progress .progress-bar:first-child {
+	border-right: 2px solid #000;
+}
+#station-list .station-item .progress.singular .progress-bar:first-child {
+	/*border-right: none;*/
+}
+#station-list .station-item .text {
+	font-size: 16px;
+	font-weight: 100;
+	line-height: 18px;
+	padding-top: 10px;
+}
+#station-list .station-item .text p {
+	margin-bottom: 5px;
+}
+#station-list .station-item .text p:last-child {
+	margin-bottom: 0;
+}
+#station-list .station-item .text strong {
+	font-weight: 300;
+}
+#station-list .station-item .text .averages {
+	font-size: 13px;
+}
+
+#station-list .station-item i {
+	color: #92EC00;
+}
+#station-list .station-item path {
+	fill: #92EC00;
+}
+#station-list .station-item i.low {
+	color: #FF7C00;
+}
+#station-list .station-item.bikes-low path {
+	fill: #FF7C00;
+}
+#station-list .station-item i.empty {
+	color: #FF1800;
+}
+#station-list .station-item.bikes-empty path {
+	fill: #FF1800;
+}
+
+.station-lock-overlay {
+	background: url(../img/wet_snow_@2X-90.png) repeat 0 0;
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+}
+.station-lock-overlay h1 {
+	color: #333;
+	font-family: inherit;
+	text-align: center;
+	padding-top: 14px;
+}
+
+/*
+| 
+| NUMBER FORMATTING
+|
+#####################################################*/
+#station-counter-container {
+	height: 100%;
+}
+.num-container, .progress-bar-success {
+	background-color: #92EC00;
+}
+.num-container {
+	color: #000;
+	text-align: center;
+	font-size: 60px;
+	line-height: 60px;
+	height: 50%;
+}
+.num-container.low, .progress-bar-warning {
+	background-color: #FF7C00;
+}
+.num-container.empty, .progress-bar-danger {
+	background-color: #FF1800;
+}
+.num-container p {
+	color: #000;
+	color: rgba(0,0,0,0.8);
+	margin: 0;
+	padding-top: 80px;
+}
+.num-container img {
+	height: 55px;
+	opacity: 0.8;
+}
+.num-container i {
+	font-size: 45px;
+}
+
+#num-bikes {
+	border-bottom: 3px solid #000;
+	border-bottom-color: rgba(0,0,0,0.7);
+}
+
+.station-banner {
+	background: rgba(0,0,0,0.6);
+	bottom: 0;
+	/*padding: 5px;*/
+	position: fixed;
+}
+.station-banner p {
+	color: #fff;
+	text-align: center;
+	font-size: 15px;
+	line-height: 15px;
+	margin: 0;
+	padding: 5px 10px;
+}
+.station-banner p.averages {
+	padding: 8px 10px;
+}
+.station-banner hr {
+	margin: 2px 0;
+}
+
+#station-list-trigger {
+	top: 0;
+	left: 0;
+	padding: 10px;
+}
+
+#station-counter-container .station-lock-overlay h1 {
+	padding-top: 100px;
+}
+
+
+
+/*
+| 
+| RESPONSIVE STYLES
+|
+#####################################################*/
+
+/* Smartphones to Tablets
+---------------------------- */
+@media (max-width: 767px) {
+	body {
+		padding-left: 0;
+		padding-right: 0;
+	}
+	.row {
+		margin-right: 0;
+		margin-left: 0;
+	}
+	#stations-list-container {
+		padding: 0;
+	}
+	#station-list .station-item .text, .station-banner p.averages, .station-banner hr {
+		display: none;
+	}
+}
+@media only screen 
+and (min-device-width: 320px)
+and (max-device-width: 568px) 
+and (orientation: landscape) {
+
+	#station-list .station-item .text, .station-banner p.averages, .station-banner hr {
+		display: block;
+	}
+    #num-bikes, #num-docks {
+    	float: left;
+    	padding: 0;
+    	margin: 0;
+    	width: 50%;
+    }
+    #num-bikes {
+    	border-bottom: none;
+    	border-right: 3px solid #000;
+		border-right-color: rgba(0,0,0,0.7);
+    }
+    .num-container {
+    	height: 100%;
+    }
+}

@@ -1,0 +1,12 @@
+# Cabi historic data collection
+MAILTO=dev@nicostaple.com
+0,15,30,45 * * * * /usr/bin/wget http://cabi.nicostaple.com/api/datacron >/dev/null
+
+# Cabi JSON data file updating
+MAILTO=dev@nicostaple.com
+* * * * * /usr/bin/wget http://cabi.nicostaple.com/api/latestjson >/dev/null
+
+# CarMe historic data collection
+MAILTO=dev@nicostaple.com
+0,15,30,45 * * * * /usr/bin/wget http://carme.nicostaple.com/api/datacron >/dev/null
+

@@ -1,0 +1,15 @@
+/*
+* MAIN STYLESHEET
+*
+* Main Stylesheet built on Bootstrap by Twitter, 
+* relies on bootstrap.css
+*
+* @author: Nico Staple & Arjun Dhillon
+* @email: team@getmighty.com
+*
+*
+*/
+
+tr.active {
+	font-weight: bold;
+}

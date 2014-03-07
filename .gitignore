@@ -1,0 +1,6 @@
+api/tmp
+.htaccess
+api/.htaccess
+api/config/config.php
+_depricated
+api/json/latest-station-data.json
