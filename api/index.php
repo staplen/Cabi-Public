@@ -47,6 +47,6 @@ else if ($page == 'latestxml') {
   exit;
 }
 else {
-  echo 'No direct access';
+  http_response_code(403);
   exit;
 }
