@@ -1,15 +1,13 @@
 <!-- <li><a href="#" id="collection-reset">refresh</a></li> -->
-<a href="#" class="reload-trigger overlay-btn"><i class="icon-refresh"></i></a>
+<a href="#" class="reload-trigger overlay-btn"><i class="fa fa-refresh"></i></a>
 <%
   stations.each(function(station) {
     var bikeClass = 'progress-bar-success';
     var dockClass = 'progress-bar-success';
-    var updateTime = new Date(parseInt(station.get('lastCommWithServer')));
+    var updateTime = station.get('lastCommWithServer') ? new Date(parseInt(station.get('lastCommWithServer'))) : false;
 
     var bikePlural = parseInt(station.get('nbBikes')) === 1 ? '' : 's';
     var dockPlural = parseInt(station.get('nbEmptyDocks')) === 1 ? '' : 's';
-    var bikeAvgPlural = parseInt(station.get('averages')['avgBikes']) === 1 ? '' : 's';
-    var dockAvgPlural = parseInt(station.get('averages')['avgDocks']) === 1 ? '' : 's';
 
     var intBikes = parseInt(station.get('nbBikes'));
     var intDocks = parseInt(station.get('nbEmptyDocks'));
@@ -51,13 +49,10 @@
           <%= station.get('name') %>
           <div class="progress<%= progressClass %>">
             <div class="progress-bar <%= bikeClass %>" style="width: <%= bikePercent %>%"><img src="/img/bike.svg" alt="" /></div>
-            <div class="progress-bar <%= dockClass %>" style="width: <%= dockPercent %>%"><i class="icon-download"></i></div>
+            <div class="progress-bar <%= dockClass %>" style="width: <%= dockPercent %>%"><i class="fa fa-arrow-circle-o-down"></i></div>
           </div>
           <div class="text">
-            <p><span class="timeago" title="<%= updateTime.toISOString() %>"></span>: <strong><%= station.get('nbBikes') %> bike<%= bikePlural %></strong> and <strong><%= station.get('nbEmptyDocks') %> dock<%= dockPlural %></strong> <%= station.get('distance').toFixed(2) %> miles away</p>
-            <% if (station.get('averages')) { %>
-              <!-- <p class="averages">On <%= station.get('averages')['weekday'] %>s around <%= station.get('averages')['prettyTime'] %>, there are an average of <%= station.get('averages')['avgBikes'] %> bike<%= bikeAvgPlural %> and <%= station.get('averages')['avgDocks'] %> dock<%= dockAvgPlural %>.</p> -->
-            <% } %>
+            <p><% if (updateTime) { %><span class="timeago" title="<%= updateTime.toISOString() %>"></span>: <% } %><strong><%= station.get('nbBikes') %> bike<%= bikePlural %></strong> and <strong><%= station.get('nbEmptyDocks') %> dock<%= dockPlural %></strong> <%= station.get('distance').toFixed(2) %> miles away</p>
           </div>
         </div><!-- END .col-md-12 -->
         <% if (station.get('locked') === 'true') { %>

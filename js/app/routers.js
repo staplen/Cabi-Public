@@ -6,7 +6,6 @@ window.cabiApp.CabiRouter = Backbone.Router.extend({
   },
 
   stationList: function() {
-  	console.log('home router called');
   	if ($('#stations-list-container').children().length === 0) {
 		window.cabiApp.stationListView.render().delegateEvents();
   	}
@@ -23,7 +22,6 @@ window.cabiApp.CabiRouter = Backbone.Router.extend({
   },
 
   stationCounter: function(stationId) {
-  	console.log('stationCounter router called');
   	if (stationId) {
 	  	var stationModel = stationId === 'closest' ? window.cabiApp.stations.sort().first() : window.cabiApp.stations.get(stationId);
 		window.cabiApp.stationCounterView = new window.cabiApp.StationCounterView({model: stationModel});

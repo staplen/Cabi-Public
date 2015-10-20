@@ -1,11 +1,9 @@
 <a id="station-list-trigger" class="overlay-btn" href="#">&larr; Station List</a>
-<a href="#" class="reload-trigger overlay-btn"><i class="icon-refresh"></i></a>
+<a href="#" class="reload-trigger overlay-btn"><i class="fa fa-refresh"></i></a>
 <% 
   var bikeClass = '';
   var dockClass = '';
-  var updateTime = new Date(parseInt(station.lastCommWithServer));
-  var bikeAvgPlural = parseInt(station.averages['avgBikes']) === 1 ? '' : 's';
-  var dockAvgPlural = parseInt(station.averages['avgDocks']) === 1 ? '' : 's';
+  var updateTime = station.lastCommWithServer ? new Date(parseInt(station.lastCommWithServer)) : false;
 
   if (station.nbBikes <= 3) {
     bikeClass = ' low';
@@ -27,15 +25,11 @@
 </div>
 <div class="row-fluid num-container<%= dockClass %>" id="num-docks">
   <div class="span12">
-    <p><%= station.nbEmptyDocks %> <i class="icon-download"></i></p>
+    <p><%= station.nbEmptyDocks %> <i class="fa fa-arrow-circle-o-down"></i></p>
   </div>
 </div>
 <div class="station-banner">
-  <p><%= station.name %><br/><em><span class="timeago" title="<%= updateTime.toISOString() %>"></span></em></p>
-  <% if (station.averages) { %>
-    <!-- <hr />
-    <p class="averages">On <%= station.averages['weekday'] %>s around <%= station.averages['prettyTime'] %>, there are an average of <%= station.averages['avgBikes'] %> bike<%= bikeAvgPlural %> and <%= station.averages['avgDocks'] %> dock<%= dockAvgPlural %>.</p> -->
-  <% } %>
+  <p><%= station.name %><br/><% if (updateTime) { %><em><span class="timeago" title="<%= updateTime.toISOString() %>"></span></em><% } %></p>
 </div>
 <% if (station.locked === 'true') { %>
   <div class="station-lock-overlay">

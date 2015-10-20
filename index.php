@@ -54,7 +54,6 @@ define('SYSROOT',dirname(__FILE__));
     <script src="js/lib/underscore-1.5.2.min.js"></script>
     <script src="js/lib/backbone-1.1.0.min.js"></script>
     <script src="js/lib/jquery.scrollTo-1.4.6.min.js"></script>
-    <script src="js/lib/bootstrap.min.js"></script>
     <script src="js/lib/jquery.timeago.js"></script>
 
     <!-- Backbone app -->
