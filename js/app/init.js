@@ -1,7 +1,22 @@
 $(function() {
+  window.cabiApp.settings = {
+    appLoaded: false,
+    reloadTriggerEl: $('.reload-trigger')
+  };
   window.cabiApp.stations = new window.cabiApp.StationCollection;
   window.cabiApp.stations.reset(window.cabiApp.latestData);
-  window.cabiApp.utils.renderInitialPage();       
+  window.cabiApp.utils.renderInitialPage();
+
+  window.cabiApp.stations.on('reset', function() {
+    window.cabiApp.utils.updateStationDistances();
+  });
+
+  window.cabiApp.settings.reloadTriggerEl.click(function(e) {
+    e.preventDefault();
+    window.cabiApp.utils.triggerStationUpdate();
+  });
+
+  window.cabiApp.utils.asyncUpdateTimeout();
 });
 
 $(window).load(function() {

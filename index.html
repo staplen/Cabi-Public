@@ -34,8 +34,9 @@
 
     <div id="content">
       <div id="loading">
-        <img src="/img/spinner_96.gif" alt="Loading..." height="48" width="48" />
+        <i class="fa fa-spinner fa-pulse"></i>
       </div>
+      <a href="#" class="reload-trigger overlay-btn"><i class="fa fa-refresh"></i></a>
       <div id="geolocation-error">
         <h1>There was an error determining your location. Please make sure location services are enabled and you've allowed Cabi to use your location information.</h1>
       </div>
@@ -48,8 +49,6 @@
     
     <!-- Backbone templates -->
     <script id="stations-list-template" type="text/template">
-      <!-- <li><a href="#" id="collection-reset">refresh</a></li> -->
-      <a href="#" class="reload-trigger overlay-btn"><i class="fa fa-refresh"></i></a>
       <%
         stations.each(function(station) {
           var bikeClass = 'progress-bar-success';
@@ -116,7 +115,6 @@
     </script>
     <script id="station-counter-template" type="text/template">
       <a id="station-list-trigger" class="overlay-btn" href="#">&larr; Station List</a>
-      <a href="#" class="reload-trigger overlay-btn"><i class="fa fa-refresh"></i></a>
       <% 
         var bikeClass = '';
         var dockClass = '';

@@ -226,11 +226,10 @@ window.cabiApp.utils = {
 
 	renderInitialPage: function() {
 		if (navigator.geolocation) {
-		  var timeoutVal = 10 * 1000 * 1000;
 		  navigator.geolocation.getCurrentPosition(
 		    this.geolocationSuccess, 
 		    this.geolocationError,
-		    { enableHighAccuracy: true, timeout: timeoutVal, maximumAge: 120000 }
+		    { enableHighAccuracy: true, timeout: 10000000, maximumAge: 120000 }
 		  );
 		}
 		else {
@@ -241,13 +240,48 @@ window.cabiApp.utils = {
 		}	
 	},
 
+	asyncUpdateTimeout: function() {
+		setTimeout(function () {
+	        window.cabiApp.utils.triggerStationUpdate();
+	    }, 3000);
+	},
+
+	triggerStationUpdate: function() {
+		$('i',window.cabiApp.settings.reloadTriggerEl).addClass('fa-spin');
+	    window.cabiApp.stations.fetch( { reset: true } );
+	},
+
+	updateStationDistances: function() {
+		navigator.geolocation.getCurrentPosition(
+			this.updateStationDistancesSuccess, 
+			this.geolocationError,
+			{ enableHighAccuracy: true, timeout: 10000000, maximumAge: 120000 }
+		);
+	},
+
+	updateStationDistancesSuccess: function(position) {
+		console.log('updateStationDistancesSuccess');
+		console.log(position);
+		var completeUpdate = _.after(window.cabiApp.stations.length, function () {
+	        window.cabiApp.stations.trigger('distancesUpdated');
+	        window.cabiApp.utils.asyncUpdateTimeout();
+	    });
+
+		window.cabiApp.stations.each(function(station,key,list){
+			var lat2 = station.get('lat');
+			var lon2 = station.get('long');
+			station.set('distance',window.cabiApp.utils.calculateDistance(position.coords.latitude, position.coords.longitude, lat2, lon2)).trigger('distanceUpdated');
+			completeUpdate();
+		});
+	},
+
 	geolocationError: function(error) {
 		var errors = { 
 			1: 'Permission denied',
 			2: 'Position unavailable',
 			3: 'Request timeout'
 		};
-		console.log("Error: " + errors[error.code]);
+		console.log("Geolocation Error: " + errors[error.code]);
 		$('#loading').hide();
 		$('#content,#geolocation-error').show();
 	},
@@ -256,7 +290,10 @@ window.cabiApp.utils = {
 		var completeRender = _.after(window.cabiApp.stations.length, function () {
 	        window.cabiApp.stationListView = new window.cabiApp.StationListView({collection: window.cabiApp.stations});
 			window.cabiApp.cabiRouter = new window.cabiApp.CabiRouter();
-			Backbone.history.start({pushState: false});
+			if (!window.cabiApp.settings.appLoaded) {
+				Backbone.history.start({pushState: false});
+				window.cabiApp.settings.appLoaded = true;
+			}
 			$('#loading').hide();
 	    });
 
@@ -295,32 +332,19 @@ window.cabiApp.StationListView = Backbone.View.extend({
 
 	id: 'station-list',
 
-	events: {
-		"click #collection-reset": "refreshCollection",
-		"click .reload-trigger": "reloadPage"
-	},
-
 	initialize: function() {
 		this.template = _.template( $('#stations-list-template').html() );
-	    // in the view, listen for events on the model / collection
-	    this.collection.bind("reset", this.render, this);
-
+	    this.collection.bind("distancesUpdated", this.render, this);
 	},
 
 	render: function() {
+		console.log('StationListView render');
 	    $(this.el).html(this.template({ stations: this.collection.sort() }));
 	    $('#stations-list-container').html(this.el);
 	    jQuery(".timeago").timeago();
+	    this.delegateEvents();
+	    window.cabiApp.settings.reloadTriggerEl.children('i').removeClass('fa-spin');
 		return this;
-	},
-
-	refreshCollection: function(e) {
-		e.preventDefault();
-	},
-
-	reloadPage: function(e) {
-		$(this.el).hide();
-		location.reload();
 	}
 
 });
@@ -332,15 +356,12 @@ window.cabiApp.StationCounterView = Backbone.View.extend({
 	id: 'station-counter-container',
 
 	events: {
-		"click #station-list-trigger": "toggleStationList",
-		"click .reload-trigger": "reloadPage"
+		"click #station-list-trigger": "toggleStationList"
 	},
 
 	initialize: function() {
 		this.template = _.template( $('#station-counter-template').html() );
-	    // in the view, listen for events on the model / collection
-	    this.model.bind("reset", this.render, this);
-
+	    this.model.bind("distanceUpdated", this.render, this);
 	},
 
 	render: function() {
@@ -350,33 +371,18 @@ window.cabiApp.StationCounterView = Backbone.View.extend({
 	    $('body').scrollTop(0);
 	    jQuery(".timeago").timeago();
 	    $(window).resize();
-	    // if (window.navigator.standalone) {
-		//     setTimeout(
-		//     	function(){
-		//     		if (Backbone.history.fragment.indexOf("stations") >= 0) {
-		// 	    		location.reload();
-		// 	    	}
-		//     	},
-		//     	30000
-		//     );
-		// }
+	    window.cabiApp.settings.reloadTriggerEl.children('i').removeClass('fa-spin');
 		return this;
 	},
 
 	toggleStationList: function(e) {
 		e.preventDefault();
 		window.cabiApp.cabiRouter.navigate("", {trigger: true});
-	},
-
-	reloadPage: function(e) {
-		$('#content').hide();
-		location.reload();
-	}
-});
+	}});
 window.cabiApp.StationCollection = Backbone.Collection.extend({
 	model: window.cabiApp.Station,
 
-	url: '/api/latestjson',
+	url: '/api/json/latest-station-data.json',
 
 	parse: function(response) {
 		var i = 0;
@@ -431,9 +437,24 @@ window.cabiApp.CabiRouter = Backbone.Router.extend({
 
 });
 $(function() {
+  window.cabiApp.settings = {
+    appLoaded: false,
+    reloadTriggerEl: $('.reload-trigger')
+  };
   window.cabiApp.stations = new window.cabiApp.StationCollection;
   window.cabiApp.stations.reset(window.cabiApp.latestData);
-  window.cabiApp.utils.renderInitialPage();       
+  window.cabiApp.utils.renderInitialPage();
+
+  window.cabiApp.stations.on('reset', function() {
+    window.cabiApp.utils.updateStationDistances();
+  });
+
+  window.cabiApp.settings.reloadTriggerEl.click(function(e) {
+    e.preventDefault();
+    window.cabiApp.utils.triggerStationUpdate();
+  });
+
+  window.cabiApp.utils.asyncUpdateTimeout();
 });
 
 $(window).load(function() {
