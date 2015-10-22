@@ -243,7 +243,7 @@ window.cabiApp.utils = {
 	asyncUpdateTimeout: function() {
 		setTimeout(function () {
 	        window.cabiApp.utils.triggerStationUpdate();
-	    }, 3000);
+	    }, 10000);
 	},
 
 	triggerStationUpdate: function() {
@@ -260,8 +260,6 @@ window.cabiApp.utils = {
 	},
 
 	updateStationDistancesSuccess: function(position) {
-		console.log('updateStationDistancesSuccess');
-		console.log(position);
 		var completeUpdate = _.after(window.cabiApp.stations.length, function () {
 	        window.cabiApp.stations.trigger('distancesUpdated');
 	        window.cabiApp.utils.asyncUpdateTimeout();
@@ -338,7 +336,6 @@ window.cabiApp.StationListView = Backbone.View.extend({
 	},
 
 	render: function() {
-		console.log('StationListView render');
 	    $(this.el).html(this.template({ stations: this.collection.sort() }));
 	    $('#stations-list-container').html(this.el);
 	    jQuery(".timeago").timeago();
@@ -361,10 +358,7 @@ window.cabiApp.StationCounterView = Backbone.View.extend({
 
 	initialize: function() {
 		this.template = _.template( $('#station-counter-template').html() );
-	    // this.model.bind("all", this.render, this);
-	    this.model.bind("all", function(eventName) {
-	    	console.log(this.model.toJSON() + ' ' + eventName);
-	    });
+	    this.model.bind("distanceUpdated", this.render, this);
 	},
 
 	render: function() {
@@ -385,7 +379,7 @@ window.cabiApp.StationCounterView = Backbone.View.extend({
 window.cabiApp.StationCollection = Backbone.Collection.extend({
 	model: window.cabiApp.Station,
 
-	url: '/api/data/json',
+	url: '/api/src/latest-station-data.json',
 
 	parse: function(response) {
 		var i = 0;
@@ -426,9 +420,6 @@ window.cabiApp.CabiRouter = Backbone.Router.extend({
   	if (stationId) {
 	  	var stationModel = stationId === 'closest' ? window.cabiApp.stations.sort().first() : window.cabiApp.stations.get(stationId);
 		window.cabiApp.stationCounterView = new window.cabiApp.StationCounterView({model: stationModel});
-		stationModel.on("all", function(eventName) {
-		  console.log(stationModel.get('id: ')+eventName);
-		});
 		window.cabiApp.stationCounterView.render();
 		$('#stations-list-container').hide();
 		$('#station-counter-container').show();
