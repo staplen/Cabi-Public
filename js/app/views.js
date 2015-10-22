@@ -3,32 +3,18 @@ window.cabiApp.StationListView = Backbone.View.extend({
 
 	id: 'station-list',
 
-	events: {
-		"click #collection-reset": "refreshCollection",
-		"click .reload-trigger": "reloadPage"
-	},
-
 	initialize: function() {
 		this.template = _.template( $('#stations-list-template').html() );
-	    // in the view, listen for events on the model / collection
-	    this.collection.bind("reset", this.render, this);
-
+	    this.collection.bind("distancesUpdated", this.render, this);
 	},
 
 	render: function() {
 	    $(this.el).html(this.template({ stations: this.collection.sort() }));
 	    $('#stations-list-container').html(this.el);
 	    jQuery(".timeago").timeago();
+	    this.delegateEvents();
+	    window.cabiApp.settings.reloadTriggerEl.children('i').removeClass('fa-spin');
 		return this;
-	},
-
-	refreshCollection: function(e) {
-		e.preventDefault();
-	},
-
-	reloadPage: function(e) {
-		$(this.el).hide();
-		location.reload();
 	}
 
 });
@@ -40,15 +26,12 @@ window.cabiApp.StationCounterView = Backbone.View.extend({
 	id: 'station-counter-container',
 
 	events: {
-		"click #station-list-trigger": "toggleStationList",
-		"click .reload-trigger": "reloadPage"
+		"click #station-list-trigger": "toggleStationList"
 	},
 
 	initialize: function() {
 		this.template = _.template( $('#station-counter-template').html() );
-	    // in the view, listen for events on the model / collection
-	    this.model.bind("reset", this.render, this);
-
+	    this.model.bind("distanceUpdated", this.render, this);
 	},
 
 	render: function() {
@@ -58,26 +41,11 @@ window.cabiApp.StationCounterView = Backbone.View.extend({
 	    $('body').scrollTop(0);
 	    jQuery(".timeago").timeago();
 	    $(window).resize();
-	    // if (window.navigator.standalone) {
-		//     setTimeout(
-		//     	function(){
-		//     		if (Backbone.history.fragment.indexOf("stations") >= 0) {
-		// 	    		location.reload();
-		// 	    	}
-		//     	},
-		//     	30000
-		//     );
-		// }
+	    window.cabiApp.settings.reloadTriggerEl.children('i').removeClass('fa-spin');
 		return this;
 	},
 
 	toggleStationList: function(e) {
 		e.preventDefault();
 		window.cabiApp.cabiRouter.navigate("", {trigger: true});
-	},
-
-	reloadPage: function(e) {
-		$('#content').hide();
-		location.reload();
-	}
-});
+	}});
