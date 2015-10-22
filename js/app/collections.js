@@ -1,7 +1,7 @@
 window.cabiApp.StationCollection = Backbone.Collection.extend({
 	model: window.cabiApp.Station,
 
-	url: '/api/json/latest-station-data.json',
+	url: '/api/data/json',
 
 	parse: function(response) {
 		var i = 0;

@@ -16,6 +16,9 @@
 $config = array();
 $config['timezone']     =   'America/New_York';
 $config['locale']       =   'en-US';
+$config['environment']  =   'dev';
+
+$config['site_url']     =   'http://localhost:8888';
 
 $config['system_url']   =   'http://www.capitalbikeshare.com/data/stations/bikeStations.xml'; /* DC */
 // $config['system_url']   =   'https://secure.niceridemn.org/data2/bikeStations.xml'; /* MSP */

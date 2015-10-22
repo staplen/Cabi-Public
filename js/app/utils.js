@@ -13,18 +13,18 @@ window.cabiApp.utils = {
 			window.cabiApp.cabiRouter = new window.cabiApp.CabiRouter();
 			Backbone.history.start({pushState: false});
 			$('#loading').hide();
-		}	
+		}
 	},
 
 	asyncUpdateTimeout: function() {
 		setTimeout(function () {
 	        window.cabiApp.utils.triggerStationUpdate();
-	    }, 3000);
+	    }, 45000);
 	},
 
 	triggerStationUpdate: function() {
 		$('i',window.cabiApp.settings.reloadTriggerEl).addClass('fa-spin');
-	    window.cabiApp.stations.fetch( { reset: true } );
+	    window.cabiApp.stations.fetch( { reset: true, cache: false } );
 	},
 
 	updateStationDistances: function() {
@@ -36,8 +36,6 @@ window.cabiApp.utils = {
 	},
 
 	updateStationDistancesSuccess: function(position) {
-		console.log('updateStationDistancesSuccess');
-		console.log(position);
 		var completeUpdate = _.after(window.cabiApp.stations.length, function () {
 	        window.cabiApp.stations.trigger('distancesUpdated');
 	        window.cabiApp.utils.asyncUpdateTimeout();

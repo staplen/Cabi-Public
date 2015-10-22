@@ -237,7 +237,7 @@ window.cabiApp.utils = {
 			window.cabiApp.cabiRouter = new window.cabiApp.CabiRouter();
 			Backbone.history.start({pushState: false});
 			$('#loading').hide();
-		}	
+		}
 	},
 
 	asyncUpdateTimeout: function() {
@@ -248,7 +248,7 @@ window.cabiApp.utils = {
 
 	triggerStationUpdate: function() {
 		$('i',window.cabiApp.settings.reloadTriggerEl).addClass('fa-spin');
-	    window.cabiApp.stations.fetch( { reset: true } );
+	    window.cabiApp.stations.fetch( { reset: true, cache: false } );
 	},
 
 	updateStationDistances: function() {
@@ -361,7 +361,10 @@ window.cabiApp.StationCounterView = Backbone.View.extend({
 
 	initialize: function() {
 		this.template = _.template( $('#station-counter-template').html() );
-	    this.model.bind("distanceUpdated", this.render, this);
+	    // this.model.bind("all", this.render, this);
+	    this.model.bind("all", function(eventName) {
+	    	console.log(this.model.toJSON() + ' ' + eventName);
+	    });
 	},
 
 	render: function() {
@@ -382,7 +385,7 @@ window.cabiApp.StationCounterView = Backbone.View.extend({
 window.cabiApp.StationCollection = Backbone.Collection.extend({
 	model: window.cabiApp.Station,
 
-	url: '/api/json/latest-station-data.json',
+	url: '/api/data/json',
 
 	parse: function(response) {
 		var i = 0;
@@ -423,6 +426,9 @@ window.cabiApp.CabiRouter = Backbone.Router.extend({
   	if (stationId) {
 	  	var stationModel = stationId === 'closest' ? window.cabiApp.stations.sort().first() : window.cabiApp.stations.get(stationId);
 		window.cabiApp.stationCounterView = new window.cabiApp.StationCounterView({model: stationModel});
+		stationModel.on("all", function(eventName) {
+		  console.log(stationModel.get('id: ')+eventName);
+		});
 		window.cabiApp.stationCounterView.render();
 		$('#stations-list-container').hide();
 		$('#station-counter-container').show();
@@ -430,7 +436,6 @@ window.cabiApp.CabiRouter = Backbone.Router.extend({
 		document.title = stationModel.get('name');
 	}
 	else {
-		console.log('no stationid');
 		stationList();
 	}
   }

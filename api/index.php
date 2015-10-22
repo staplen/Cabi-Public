@@ -22,12 +22,6 @@ require_once (CONFIG_DIR . DS . 'locale.php');
 define('URL_ROOT',        $config['site_url']);
 
 
-/* Start the session
-------------------------------------------------------------------*/
-fSession::setPath(SYSROOT . DS . 'tmp' . DS . 'sessions');
-fSession::open();
-
-
 /* Get queries
 ------------------------------------------------------------------*/
 $page         = strtolower(fRequest::get('page') ?      fRequest::get('page')     : FALSE);
@@ -39,12 +33,16 @@ require_once ('helper_functions.php');
 
 
 if ($page == 'latestjson') {
-  require_once('json_data.php');
+  require_once('update_data.php');
   exit;
 }
 else if ($page == 'latestxml') {
   require_once('raw_xml.php');
   exit;
+}
+else if ($page == 'data') {
+	require_once('get_data.php');
+	exit;
 }
 else {
   http_response_code(403);

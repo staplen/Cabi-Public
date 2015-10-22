@@ -2,5 +2,6 @@ api/tmp
 .htaccess
 api/.htaccess
 _depricated
-api/json/latest-station-data.json
+api/src
 node_modules
+dist/

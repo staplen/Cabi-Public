@@ -9,7 +9,6 @@ window.cabiApp.StationListView = Backbone.View.extend({
 	},
 
 	render: function() {
-		console.log('StationListView render');
 	    $(this.el).html(this.template({ stations: this.collection.sort() }));
 	    $('#stations-list-container').html(this.el);
 	    jQuery(".timeago").timeago();

@@ -32,7 +32,6 @@ window.cabiApp.CabiRouter = Backbone.Router.extend({
 		document.title = stationModel.get('name');
 	}
 	else {
-		console.log('no stationid');
 		stationList();
 	}
   }
