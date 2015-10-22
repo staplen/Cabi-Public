@@ -80,9 +80,19 @@
           var totalDocks = intBikes + intDocks;
 
           var bikePercent = intBikes / totalDocks;
-          bikePercent = Math.round(bikePercent * 100);
+          bikePercent = Math.floor(bikePercent * 100);
           var dockPercent = intDocks / totalDocks;
-          dockPercent = Math.round(dockPercent * 100);
+          dockPercent = Math.floor(dockPercent * 100);
+          var percentTotal = dockPercent + bikePercent;
+
+          if (percentTotal !== 100) {
+            if (dockPercent < bikePercent) {
+              dockPercent = dockPercent + (100 - percentTotal);
+            }
+            else if (dockPercent > bikePercent) {
+              bikePercent = bikePercent + (100 - percentTotal);
+            }
+          }
           
           // Set percentage min and max for bar chart display and classes for progress bars
           if (station.get('nbBikes') <= 3) {

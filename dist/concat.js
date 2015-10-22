@@ -248,9 +248,9 @@ window.cabiApp.utils = {
 	},
 
 	asyncUpdateTimeout: function() {
-		setTimeout(function () {
-	        window.cabiApp.utils.triggerStationUpdate();
-	    }, 10000);
+		// setTimeout(function () {
+	 //        window.cabiApp.utils.triggerStationUpdate();
+	 //    }, 10000);
 	},
 
 	triggerStationUpdate: function() {
