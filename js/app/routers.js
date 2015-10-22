@@ -30,7 +30,7 @@ window.cabiApp.CabiRouter = Backbone.Router.extend({
 	  	var stationModel = stationId === 'closest' ? window.cabiApp.stations.sort().first() : window.cabiApp.stations.get(stationId);
 		window.cabiApp.stationCounterView = new window.cabiApp.StationCounterView({model: stationModel});
 		window.cabiApp.stationCounterView.render();
-		$('#stations-list-container').hide();
+		$('#stations-list-container, #geolocation-error').hide();
 		$('#station-counter-container').show();
 		window.stationId = stationId;
 		document.title = stationModel.get('name');
