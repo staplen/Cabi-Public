@@ -56,19 +56,20 @@ window.cabiApp.utils = {
 			3: 'Request timeout'
 		};
 		console.log("Geolocation Error: " + errors[error.code]);
-		$('#loading').hide();
-		$('#content,#geolocation-error').show();
+		window.cabiApp.stations.order = 'name';
+		window.cabiApp.stations.sort();
+		window.cabiApp.utils.completeAppRender();
+		$('.distance-text').hide();
+		$('#geolocation-error').slideDown();
 	},
 
 	geolocationSuccess: function(position) {
 		var completeRender = _.after(window.cabiApp.stations.length, function () {
-	        window.cabiApp.stationListView = new window.cabiApp.StationListView({collection: window.cabiApp.stations});
-			window.cabiApp.cabiRouter = new window.cabiApp.CabiRouter();
-			if (!window.cabiApp.settings.appLoaded) {
-				Backbone.history.start({pushState: false});
-				window.cabiApp.settings.appLoaded = true;
-			}
-			$('#loading').hide();
+			window.cabiApp.stations.order = 'distance';
+			window.cabiApp.stations.sort();
+			window.cabiApp.utils.completeAppRender();
+			$('#geolocation-error').slideUp();
+			$('.distance-text').show();
 	    });
 
 		window.cabiApp.stations.each(function(station,key,list){
@@ -77,6 +78,16 @@ window.cabiApp.utils = {
 			station.set('distance',window.cabiApp.utils.calculateDistance(position.coords.latitude, position.coords.longitude, lat2, lon2));
 			completeRender();
 		});
+	},
+
+	completeAppRender: function() {
+		window.cabiApp.stationListView = new window.cabiApp.StationListView({collection: window.cabiApp.stations});
+		window.cabiApp.cabiRouter = new window.cabiApp.CabiRouter();
+		if (!window.cabiApp.settings.appLoaded) {
+			Backbone.history.start({pushState: false});
+			window.cabiApp.settings.appLoaded = true;
+		}
+		$('#loading').hide();
 	},
 
 	calculateDistance: function(lat1, lon1, lat2, lon2) {

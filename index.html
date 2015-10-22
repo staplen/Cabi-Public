@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-US">
   <head>
+    <meta charset="UTF-8">
     <title>Cabi Glance</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -32,8 +33,10 @@
   <body>
 
     <!--[if lt IE 10]>
-    <div class="alert alert-warning cabi-alert" role="alert">This website was designed for modern browsers. Please <a href="http://browsehappy.com/">update your browser</a> for the best experience.</div>
+    <div class="alert alert-warning cabi-alert browser-warning" role="alert">This website was designed for modern browsers. Please <a href="http://browsehappy.com/">update your browser</a> for the best experience.</div>
     <![endif]-->
+
+    <div class="alert alert-warning cabi-alert" role="alert" id="geolocation-error">There was an error determining your location so stations are displayed alphabetically. Please enable location access for Cabi Glance to display stations in geographic order.</div>
 
     <div id="content">
       <div id="loading">
@@ -51,16 +54,14 @@
               <h4 class="modal-title" id="myModalLabel">About Cabi Glance</h4>
             </div>
             <div class="modal-body">
-              <p>Use Cabi Glance when you're on the go and want to quickly check for <a href="http://www.capitalbikeshare.com/" target="_blank">Capital Bikeshare</a> bike and dock availability. Support for many more cities coming soon!</p>
-              <p>Cabi Glance is made by <a href="http://nicostaple.com" target="_blank">Nico Staple</a>. Feeback welcome <a href="https://twitter.com/stapletweets" target="_blank">@StapleTweets</a> or <a href="mailto:cabi@nicostaple.com">cabi@nicostaple.com</a>. Enjoying the app and feeling generous? <a href="https://cash.me/$taple" target="_blank">https://cash.me/$taple</a></p>
+              <p>Use Cabi Glance when you're on the go and want to quickly check for <a href="http://www.capitalbikeshare.com/" target="_blank">Capital Bikeshare</a> bike and dock availability.</p>
+              <p>Cabi Glance is made by <a href="http://nicostaple.com" target="_blank">Nico Staple</a>. Feedback welcome <a href="https://twitter.com/stapletweets" target="_blank">@StapleTweets</a> or <a href="mailto:cabi@nicostaple.com">cabi@nicostaple.com</a>.</p>
+              <p>Enjoying the app and feeling generous? <a href="https://cash.me/$taple" target="_blank">https://cash.me/$taple</a></p>
             </div>
           </div>
         </div>
       </div>
 
-      <div id="geolocation-error">
-        <h1>There was an error determining your location. Please make sure location services are enabled and you've allowed Cabi to use your location information.</h1>
-      </div>
       <div id="stations-list-container"></div>
     </div>
 
@@ -132,7 +133,7 @@
                   <div class="progress-bar <%= dockClass %>" style="width: <%= dockPercent %>%"><i class="fa fa-arrow-circle-o-down"></i></div>
                 </div>
                 <div class="text">
-                  <p><% if (updateTime) { %><span class="timeago" title="<%= updateTime.toISOString() %>"></span>: <% } %><strong><%= station.get('nbBikes') %> bike<%= bikePlural %></strong> and <strong><%= station.get('nbEmptyDocks') %> dock<%= dockPlural %></strong> <%= station.get('distance').toFixed(2) %> miles away</p>
+                  <p><% if (updateTime) { %><span class="timeago" title="<%= updateTime.toISOString() %>"></span>: <% } %><strong><%= station.get('nbBikes') %> bike<%= bikePlural %></strong> and <strong><%= station.get('nbEmptyDocks') %> dock<%= dockPlural %></strong><span class="distance-text"> <%= station.get('distance').toFixed(2) %> miles away</span></p>
                 </div>
               </div><!-- END .col-md-12 -->
               <% if (station.get('locked') === 'true') { %>

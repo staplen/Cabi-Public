@@ -54,9 +54,6 @@
 #geolocation-error {
 	display: none;
 }
-#geolocation-error {
-	padding: 35px;
-}
 #content #loading {
 	text-align: center;
 	padding-top: 20px;
@@ -99,10 +96,14 @@
 }
 
 .cabi-alert {
+	font-size: 16px;
     text-align: center;
+    border-radius: 0;
+    margin-bottom: 0;
+}
+.browser-warning {
     font-size: 20px;
     font-weight: 600;
-    border-radius: 0;
     padding: 25px 15px;
 }
 
