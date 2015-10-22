@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Cabi</title>
+    <title>Cabi Glance</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -36,7 +36,25 @@
       <div id="loading">
         <i class="fa fa-spinner fa-pulse"></i>
       </div>
-      <a href="#" class="reload-trigger overlay-btn"><i class="fa fa-refresh"></i></a>
+
+      <a href="#" class="overlay-btn info-btn" data-toggle="modal" data-target="#about-modal"><i class="fa fa-info-circle"></i></a>
+
+      <!-- Modal -->
+      <div class="modal fade" id="about-modal" tabindex="-1" role="dialog" aria-labelledby="aboutModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabel">About Cabi Glance</h4>
+            </div>
+            <div class="modal-body">
+              <p>Use Cabi Glance when you're on the go and want to quickly check for <a href="http://www.capitalbikeshare.com/" target="_blank">Capital Bikeshare</a> bike and dock availability. Support for many more cities coming soon!</p>
+              <p>Cabi Glance is made by <a href="http://nicostaple.com" target="_blank">Nico Staple</a>. Feeback welcome <a href="https://twitter.com/stapletweets" target="_blank">@StapleTweets</a> or <a href="mailto:cabi@nicostaple.com">cabi@nicostaple.com</a>. Enjoying the app and feeling generous? <a href="https://cash.me/$taple" target="_blank">https://cash.me/$taple</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div id="geolocation-error">
         <h1>There was an error determining your location. Please make sure location services are enabled and you've allowed Cabi to use your location information.</h1>
       </div>

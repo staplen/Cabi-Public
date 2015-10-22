@@ -93,9 +93,18 @@
 	background: rgba(0,0,0,1.0);
 }
 
-.reload-trigger {
+.reload-trigger, .info-btn {
 	top: 0;
 	right: 0;
+}
+
+/*
+| 
+| ABOUT MODAL
+|
+#####################################################*/
+#about-modal p {
+	font-size: 16px;
 }
 
 

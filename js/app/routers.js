@@ -18,7 +18,7 @@ window.cabiApp.CabiRouter = Backbone.Router.extend({
 	else {
 		$('#stations-list-container').show();
 	}
-	document.title = "Cabi - Station List";
+	document.title = "Cabi Glance - Station List";
   },
 
   stationCounter: function(stationId) {
