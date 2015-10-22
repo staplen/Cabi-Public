@@ -1,7 +1,8 @@
 $(function() {
   window.cabiApp.settings = {
     appLoaded: false,
-    reloadTriggerEl: $('.reload-trigger')
+    reloadTriggerEl: $('.reload-trigger'),
+    fullBaseUrl: "http://cabi.nicostaple.com"
   };
   window.cabiApp.stations = new window.cabiApp.StationCollection;
   window.cabiApp.stations.reset(window.cabiApp.latestData);

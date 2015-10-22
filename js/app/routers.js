@@ -19,6 +19,10 @@ window.cabiApp.CabiRouter = Backbone.Router.extend({
 		$('#stations-list-container').show();
 	}
 	document.title = "Cabi Glance - Station List";
+	ga('send', 'pageview', {
+	  'page': window.cabiApp.settings.fullBaseUrl+'/'+Backbone.history.fragment,
+	  'title': "Cabi Glance - Station List"
+	});
   },
 
   stationCounter: function(stationId) {
@@ -30,6 +34,10 @@ window.cabiApp.CabiRouter = Backbone.Router.extend({
 		$('#station-counter-container').show();
 		window.stationId = stationId;
 		document.title = stationModel.get('name');
+		ga('send', 'pageview', {
+		  'page': window.cabiApp.settings.fullBaseUrl+'/'+Backbone.history.fragment,
+		  'title': stationModel.get('name')
+		});
 	}
 	else {
 		stationList();
