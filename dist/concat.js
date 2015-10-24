@@ -248,6 +248,7 @@ window.cabiApp.utils = {
 	},
 
 	asyncUpdateTimeout: function() {
+		console.log('asyncUpdateTimeout');
 		setTimeout(function () {
 	        window.cabiApp.utils.triggerStationUpdate();
 	    }, 10000);
@@ -255,29 +256,42 @@ window.cabiApp.utils = {
 
 	triggerStationUpdate: function() {
 		$('i',window.cabiApp.settings.reloadTriggerEl).addClass('fa-spin');
-	    window.cabiApp.stations.fetch( { reset: true, cache: false } );
+	    window.cabiApp.stations.fetch( { cache: false, complete: window.cabiApp.utils.asyncUpdateTimeout } );
 	},
 
 	updateStationDistances: function() {
 		navigator.geolocation.getCurrentPosition(
-			this.updateStationDistancesSuccess, 
+			this.updateStationDistancesSuccess,
 			this.geolocationError,
 			{ enableHighAccuracy: true, timeout: 10000000, maximumAge: 120000 }
 		);
 	},
 
 	updateStationDistancesSuccess: function(position) {
-		var completeUpdate = _.after(window.cabiApp.stations.length, function () {
-	        window.cabiApp.stations.trigger('distancesUpdated');
-	        window.cabiApp.utils.asyncUpdateTimeout();
-	    });
+		console.log('old position: ' + window.cabiApp.settings.userLocationString);
+		console.log('new position: ' + window.cabiApp.utils.geoPositionToString(position));
 
-		window.cabiApp.stations.each(function(station,key,list){
-			var lat2 = station.get('lat');
-			var lon2 = station.get('long');
-			station.set('distance',window.cabiApp.utils.calculateDistance(position.coords.latitude, position.coords.longitude, lat2, lon2)).trigger('distanceUpdated');
-			completeUpdate();
-		});
+		if (window.cabiApp.utils.geoPositionToString(position) !== window.cabiApp.settings.userLocationString) {
+			console.log('position changed');
+
+			window.cabiApp.settings.userLocation = position;
+			window.cabiApp.settings.userLocationString = position.coords.latitude + "," + position.coords.longitude;
+
+			var completeUpdate = _.after(window.cabiApp.stations.length, function () {
+		        window.cabiApp.stations.trigger('distancesUpdated');
+		    });
+
+			window.cabiApp.stations.each(function(station,key,list){
+				var lat2 = station.get('lat');
+				var lon2 = station.get('long');
+				station.set('distance',window.cabiApp.utils.calculateDistance(position.coords.latitude, position.coords.longitude, lat2, lon2));
+				station.trigger('distanceUpdated');
+				completeUpdate();
+			});
+		}
+		else {
+			console.log('position UNchanged');
+		}
 	},
 
 	geolocationError: function(error) {
@@ -295,6 +309,9 @@ window.cabiApp.utils = {
 	},
 
 	geolocationSuccess: function(position) {
+		window.cabiApp.settings.userLocation = position;
+		window.cabiApp.settings.userLocationString = window.cabiApp.utils.geoPositionToString(position);
+
 		var completeRender = _.after(window.cabiApp.stations.length, function () {
 			window.cabiApp.stations.order = 'distance';
 			window.cabiApp.stations.sort();
@@ -312,13 +329,17 @@ window.cabiApp.utils = {
 	},
 
 	completeAppRender: function() {
-		window.cabiApp.stationListView = new window.cabiApp.StationListView({collection: window.cabiApp.stations});
+		window.cabiApp.stationListView = new window.cabiApp.StationCollectionView({collection: window.cabiApp.stations});
 		window.cabiApp.cabiRouter = new window.cabiApp.CabiRouter();
 		if (!window.cabiApp.settings.appLoaded) {
 			Backbone.history.start({pushState: false});
 			window.cabiApp.settings.appLoaded = true;
 		}
 		$('#loading').hide();
+	},
+
+	geoPositionToString: function(position) {
+		return position.coords.latitude + "," + position.coords.longitude;
 	},
 
 	calculateDistance: function(lat1, lon1, lat2, lon2) {
@@ -339,48 +360,159 @@ window.cabiApp.utils = {
 	}
 }
 window.cabiApp.Station = Backbone.Model.extend({
+	
 	defaults: {
 		"distance" : 0
+	},
+
+	initialize: function() {
+		this.on("all", function(eventName) {
+		  console.log(this.get('name') + ": " + eventName);
+		});
+		this.on("change:nbBikes change:nbEmptyDocks change:lastCommWithServer", function(eventName) {
+		  this.setViewVariables();
+		});
+		this.setViewVariables();
+	},
+
+	setViewVariables: function() {
+		var listBikeClass = 'progress-bar-success';
+		var listDockClass = 'progress-bar-success';
+		var singleBikeClass, singleDockClass;
+		var updateTime = this.get('lastCommWithServer') ? new Date(parseInt(this.get('lastCommWithServer'))) : false;
+
+		var bikePlural = parseInt(this.get('nbBikes')) === 1 ? '' : 's';
+		var dockPlural = parseInt(this.get('nbEmptyDocks')) === 1 ? '' : 's';
+
+		var intBikes = parseInt(this.get('nbBikes'));
+		var intDocks = parseInt(this.get('nbEmptyDocks'));
+		var totalDocks = intBikes + intDocks;
+
+		var bikePercent = intBikes / totalDocks;
+		bikePercent = Math.floor(bikePercent * 100);
+		var dockPercent = intDocks / totalDocks;
+		dockPercent = Math.floor(dockPercent * 100);
+		var percentTotal = dockPercent + bikePercent;
+
+		if (percentTotal !== 100) {
+			if (dockPercent < bikePercent) {
+				dockPercent = dockPercent + (100 - percentTotal);
+			}
+			else if (dockPercent > bikePercent) {
+				bikePercent = bikePercent + (100 - percentTotal);
+			}
+		}
+
+		// Set percentage min and max for bar chart display and classes for progress bars
+		if (this.get('nbBikes') <= 3) {
+			listBikeClass = 'progress-bar-warning';
+			singleBikeClass = ' low'
+			bikePercent = 25;
+			dockPercent = 75;
+			if (this.get('nbBikes') == 0) {
+				listBikeClass = 'progress-bar-danger';
+				singleBikeClass = ' empty';
+				bikePercent = 15;
+				dockPercent = 85;
+			}
+		}
+		if (this.get('nbEmptyDocks') <= 3) {
+			listDockClass = 'progress-bar-warning';
+			singleDockClass = ' low';
+			bikePercent = 75;
+			dockPercent = 25;
+			if (this.get('nbEmptyDocks') == 0) {
+				listDockClass = 'progress-bar-danger';
+				singleDockClass = ' empty';
+				bikePercent = 85;
+				dockPercent = 15;
+			}
+		}
+
+		var progressClass = (intBikes > 0 && intDocks > 0) ? '' : ' singular';
+
+		this.set('viewVariables', {
+			progressClass: progressClass,
+			listBikeClass: listBikeClass,
+			singleBikeClass: singleBikeClass,
+			bikePercent: bikePercent,
+			listDockClass: listDockClass,
+			singleDockClass: singleDockClass,
+			dockPercent: dockPercent,
+			updateTime: updateTime,
+			bikePlural: bikePlural,
+			dockPlural: dockPlural
+		});
 	}
+
 });
 // Station List View
 window.cabiApp.StationListView = Backbone.View.extend({
 
-	id: 'station-list',
+	id: function() {
+		return 'station-' + this.model.get('id');
+	},
+
+	className: 'row station-item',
 
 	initialize: function() {
-		this.template = _.template( $('#stations-list-template').html() );
-	    this.collection.bind("distancesUpdated", this.render, this);
+		this.template = _.template( $('#station-list-template').html() );
+	    this.listenTo(this.model, "change", this.render);
 	},
 
 	render: function() {
-	    $(this.el).html(this.template({ stations: this.collection.sort() }));
-	    $('#stations-list-container').html(this.el);
-	    jQuery(".timeago").timeago();
-	    this.delegateEvents();
-	    window.cabiApp.settings.reloadTriggerEl.children('i').removeClass('fa-spin');
+	    $(this.el).html(this.template(this.model.toJSON()));
+	    jQuery(".timeago",this.el).timeago();
 		return this;
+	}
+
+});
+
+window.cabiApp.StationCollectionView = Backbone.View.extend({
+
+	id: 'station-list',
+
+	render: function() {
+		var self = this;
+		this.$el.empty();
+
+		var completeRender = _.after(this.collection.length, function() {
+			$('#stations-list-container').html(self.$el);
+		});
+		this.collection.each( function(station) {
+			var stationListView = new window.cabiApp.StationListView ({ model: station });
+			self.$el.append(stationListView.render().el);
+			completeRender();
+		});
+
+		return this;
+	},
+
+	initialize: function() {
+		this.listenTo(this.collection, "reset", this.render);
 	}
 
 });
 
 
 // Station Counter View
-window.cabiApp.StationCounterView = Backbone.View.extend({
+window.cabiApp.StationSingleView = Backbone.View.extend({
 
-	id: 'station-counter-container',
+	id: 'station-single-container',
 
 	events: {
 		"click #station-list-trigger": "toggleStationList"
 	},
 
 	initialize: function() {
-		this.template = _.template( $('#station-counter-template').html() );
-	    this.model.bind("distanceUpdated", this.render, this);
+		this.template = _.template( $('#station-single-template').html() );
+	    this.listenTo(this.model, "change:viewVariables change:locked change:name", this.render);
+	    this.render();
 	},
 
 	render: function() {
-	    $(this.el).html(this.template({station:this.model.toJSON()}));
+		console.log('rendering ' + this.model.get('name'));
+	    $(this.el).html(this.template(this.model.toJSON()));
 	    $('#content').append(this.el);
 	    $('#loading').hide();
 	    $('body').scrollTop(0);
@@ -392,6 +524,7 @@ window.cabiApp.StationCounterView = Backbone.View.extend({
 
 	toggleStationList: function(e) {
 		e.preventDefault();
+		this.remove();
 		window.cabiApp.cabiRouter.navigate("", {trigger: true});
 	}});
 window.cabiApp.StationCollection = Backbone.Collection.extend({
@@ -401,13 +534,13 @@ window.cabiApp.StationCollection = Backbone.Collection.extend({
 
 	order: 'distance',
 
-	parse: function(response) {
-		var i = 0;
-		_.each(response, function(){
-			window.cabiApp.stations.add(response[i]);
-			i++;
-		});
-	},
+	// parse: function(response) {
+	// 	var i = 0;
+	// 	_.each(response, function(){
+	// 		window.cabiApp.stations.add(response[i]);
+	// 		i++;
+	// 	});
+	// },
 
 	comparator: function(station) {
 		if (this.order === 'name') {
@@ -428,7 +561,7 @@ window.cabiApp.CabiRouter = Backbone.Router.extend({
   	if ($('#stations-list-container').children().length === 0) {
 		window.cabiApp.stationListView.render().delegateEvents();
   	}
-	$('#station-counter-container').remove();
+	$('#station-single-container').remove();
 	if (window.stationId) {
 		var scrollToEl = $('#station-'+window.stationId);
 		$('#stations-list-container').show();
@@ -447,10 +580,9 @@ window.cabiApp.CabiRouter = Backbone.Router.extend({
   stationCounter: function(stationId) {
   	if (stationId) {
 	  	var stationModel = stationId === 'closest' ? window.cabiApp.stations.sort().first() : window.cabiApp.stations.get(stationId);
-		window.cabiApp.stationCounterView = new window.cabiApp.StationCounterView({model: stationModel});
-		window.cabiApp.stationCounterView.render();
+		window.cabiApp.stationSingleView = new window.cabiApp.StationSingleView({model: stationModel});
 		$('#stations-list-container, #geolocation-error').hide();
-		$('#station-counter-container').show();
+		$('#station-single-container').show();
 		window.stationId = stationId;
 		document.title = stationModel.get('name');
 		ga('send', 'pageview', {
@@ -465,11 +597,21 @@ window.cabiApp.CabiRouter = Backbone.Router.extend({
 
 });
 $(function() {
+
   window.cabiApp.settings = {
+
     appLoaded: false,
+
     reloadTriggerEl: $('.reload-trigger'),
-    fullBaseUrl: "http://cabi.nicostaple.com"
+
+    fullBaseUrl: "http://cabi.nicostaple.com",
+
+    userLocationObj: null,
+
+    userLocationString: ""
+
   };
+
   window.cabiApp.stations = new window.cabiApp.StationCollection;
   window.cabiApp.stations.reset(window.cabiApp.latestData);
   window.cabiApp.utils.renderInitialPage();

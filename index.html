@@ -70,115 +70,41 @@
     <script src="dist/all.js"></script>
     
     <!-- Backbone templates -->
-    <script id="stations-list-template" type="text/template">
-      <%
-        stations.each(function(station) {
-          var bikeClass = 'progress-bar-success';
-          var dockClass = 'progress-bar-success';
-          var updateTime = station.get('lastCommWithServer') ? new Date(parseInt(station.get('lastCommWithServer'))) : false;
-
-          var bikePlural = parseInt(station.get('nbBikes')) === 1 ? '' : 's';
-          var dockPlural = parseInt(station.get('nbEmptyDocks')) === 1 ? '' : 's';
-
-          var intBikes = parseInt(station.get('nbBikes'));
-          var intDocks = parseInt(station.get('nbEmptyDocks'));
-          var totalDocks = intBikes + intDocks;
-
-          var bikePercent = intBikes / totalDocks;
-          bikePercent = Math.floor(bikePercent * 100);
-          var dockPercent = intDocks / totalDocks;
-          dockPercent = Math.floor(dockPercent * 100);
-          var percentTotal = dockPercent + bikePercent;
-
-          if (percentTotal !== 100) {
-            if (dockPercent < bikePercent) {
-              dockPercent = dockPercent + (100 - percentTotal);
-            }
-            else if (dockPercent > bikePercent) {
-              bikePercent = bikePercent + (100 - percentTotal);
-            }
-          }
-          
-          // Set percentage min and max for bar chart display and classes for progress bars
-          if (station.get('nbBikes') <= 3) {
-            bikeClass = 'progress-bar-warning';
-            bikePercent = 25;
-            dockPercent = 75;
-            if (station.get('nbBikes') == 0) {
-              bikeClass = 'progress-bar-danger';
-              bikePercent = 15;
-              dockPercent = 85;
-            }
-          }
-          if (station.get('nbEmptyDocks') <= 3) {
-            dockClass = 'progress-bar-warning';
-            bikePercent = 75;
-            dockPercent = 25;
-            if (station.get('nbEmptyDocks') == 0) {
-              dockClass = 'progress-bar-danger';
-              bikePercent = 85;
-              dockPercent = 15;
-            }
-          }
-
-          var progressClass = (intBikes > 0 && intDocks > 0) ? '' : ' singular';
-
-          %>
-          <div class="row station-item" id="station-<%= station.get('id') %>">
-            <a href="#stations/<%= station.get('id') %>" data-id="<%= station.get('id') %>">
-              <div class="col-md-12">
-                <%= station.get('name') %>
-                <div class="progress<%= progressClass %>">
-                  <div class="progress-bar <%= bikeClass %>" style="width: <%= bikePercent %>%"><img src="/img/bike.svg" alt="" /></div>
-                  <div class="progress-bar <%= dockClass %>" style="width: <%= dockPercent %>%"><i class="fa fa-arrow-circle-o-down"></i></div>
-                </div>
-                <div class="text">
-                  <p><% if (updateTime) { %><span class="timeago" title="<%= updateTime.toISOString() %>"></span>: <% } %><strong><%= station.get('nbBikes') %> bike<%= bikePlural %></strong> and <strong><%= station.get('nbEmptyDocks') %> dock<%= dockPlural %></strong><span class="distance-text"> <%= station.get('distance').toFixed(2) %> miles away</span></p>
-                </div>
-              </div><!-- END .col-md-12 -->
-              <% if (station.get('locked') === 'true') { %>
-                <div class="station-lock-overlay">
-                  <h1>Station Closed</h1>
-                </div>
-              <% } %>
-            </a>
+    <script id="station-list-template" type="text/template">
+      <a href="#stations/<%= id %>" data-id="<%= id %>">
+        <div class="col-md-12">
+          <%= name %>
+          <div class="progress<%= viewVariables.progressClass %>">
+            <div class="progress-bar <%= viewVariables.listBikeClass %>" style="width: <%= viewVariables.bikePercent %>%"><img src="/img/bike.svg" alt="" /></div>
+            <div class="progress-bar <%= viewVariables.listDockClass %>" style="width: <%= viewVariables.dockPercent %>%"><i class="fa fa-arrow-circle-o-down"></i></div>
           </div>
-      <% }); %>
+          <div class="text">
+            <p><% if (viewVariables.updateTime) { %><span class="timeago" title="<%= viewVariables.updateTime.toISOString() %>"></span>: <% } %><strong><%= nbBikes %> bike<%= viewVariables.bikePlural %></strong> and <strong><%= nbEmptyDocks %> dock<%= viewVariables.dockPlural %></strong><span class="distance-text"> <%= distance.toFixed(2) %> miles away</span></p>
+          </div>
+        </div><!-- END .col-md-12 -->
+        <% if (locked === 'true') { %>
+          <div class="station-lock-overlay">
+            <h1>Station Closed</h1>
+          </div>
+        <% } %>
+      </a>
     </script>
-    <script id="station-counter-template" type="text/template">
+    <script id="station-single-template" type="text/template">
       <a id="station-list-trigger" class="overlay-btn" href="#">&larr; Station List</a>
-      <% 
-        var bikeClass = '';
-        var dockClass = '';
-        var updateTime = station.lastCommWithServer ? new Date(parseInt(station.lastCommWithServer)) : false;
-
-        if (station.nbBikes <= 3) {
-          bikeClass = ' low';
-            if (station.nbBikes == 0) {
-              bikeClass = ' empty';
-            }
-        }
-        if (station.nbEmptyDocks <= 3) {
-          dockClass = ' low';
-            if (station.nbEmptyDocks == 0) {
-              dockClass = ' empty';
-            }
-        }
-      %>
-      <div class="row-fluid num-container<%= bikeClass %>" id="num-bikes">
+      <div class="row-fluid num-container<%= viewVariables.singleBikeClass %>" id="num-bikes">
         <div class="span12">
-          <p><%= station.nbBikes %> <img src="/img/bike.svg" alt="" /></p>
+          <p><%= nbBikes %> <img src="/img/bike.svg" alt="" /></p>
         </div>
       </div>
-      <div class="row-fluid num-container<%= dockClass %>" id="num-docks">
+      <div class="row-fluid num-container<%= viewVariables.singleDockClass %>" id="num-docks">
         <div class="span12">
-          <p><%= station.nbEmptyDocks %> <i class="fa fa-arrow-circle-o-down"></i></p>
+          <p><%= nbEmptyDocks %> <i class="fa fa-arrow-circle-o-down"></i></p>
         </div>
       </div>
       <div class="station-banner">
-        <p><%= station.name %><br/><% if (updateTime) { %><em><span class="timeago" title="<%= updateTime.toISOString() %>"></span></em><% } %></p>
+        <p><%= name %><br/><% if (viewVariables.updateTime) { %><em><span class="timeago" title="<%= viewVariables.updateTime.toISOString() %>"></span></em><% } %></p>
       </div>
-      <% if (station.locked === 'true') { %>
+      <% if (locked === 'true') { %>
         <div class="station-lock-overlay">
           <h1>Station Closed</h1>
         </div>

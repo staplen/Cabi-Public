@@ -132,7 +132,6 @@
 }
 #station-list .station-item {
 	border-bottom: 1px solid #000;
-	/*border-bottom-color: rgba(0,0,0,0.6);*/
 	padding: 15px 0;
 	position: relative;
 }
@@ -148,9 +147,12 @@
 	height: 20px;
 	width: 20px;
 }
+#station-list .station-item a:hover,
+#station-list .station-item a:focus {
+	text-decoration: none;
+}
 #station-list .station-item a:hover {
 	color: rgba(0,0,0,1);
-	text-decoration: none;
 }
 #station-list .station-item span.distance, #station-list .station-item span.time {
 	background: rgba(0,0,0,0.4);
@@ -243,7 +245,7 @@
 | NUMBER FORMATTING
 |
 #####################################################*/
-#station-counter-container {
+#station-single-container {
 	height: 100%;
 }
 .num-container, .progress-bar-success {
@@ -308,7 +310,7 @@
 	padding: 10px;
 }
 
-#station-counter-container .station-lock-overlay h1 {
+#station-single-container .station-lock-overlay h1 {
 	padding-top: 100px;
 }
 
