@@ -24,29 +24,35 @@ window.cabiApp.utils = {
 
 	triggerStationUpdate: function() {
 		$('i',window.cabiApp.settings.reloadTriggerEl).addClass('fa-spin');
-	    window.cabiApp.stations.fetch( { reset: true, cache: false } );
+	    window.cabiApp.stations.fetch( { cache: false, complete: window.cabiApp.utils.asyncUpdateTimeout } );
 	},
 
 	updateStationDistances: function() {
 		navigator.geolocation.getCurrentPosition(
-			this.updateStationDistancesSuccess, 
+			this.updateStationDistancesSuccess,
 			this.geolocationError,
 			{ enableHighAccuracy: true, timeout: 10000000, maximumAge: 120000 }
 		);
 	},
 
 	updateStationDistancesSuccess: function(position) {
-		var completeUpdate = _.after(window.cabiApp.stations.length, function () {
-	        window.cabiApp.stations.trigger('distancesUpdated');
-	        window.cabiApp.utils.asyncUpdateTimeout();
-	    });
+		if (window.cabiApp.utils.geoPositionToString(position) !== window.cabiApp.settings.userLocationString) {
 
-		window.cabiApp.stations.each(function(station,key,list){
-			var lat2 = station.get('lat');
-			var lon2 = station.get('long');
-			station.set('distance',window.cabiApp.utils.calculateDistance(position.coords.latitude, position.coords.longitude, lat2, lon2)).trigger('distanceUpdated');
-			completeUpdate();
-		});
+			window.cabiApp.settings.userLocation = position;
+			window.cabiApp.settings.userLocationString = position.coords.latitude + "," + position.coords.longitude;
+
+			var completeUpdate = _.after(window.cabiApp.stations.length, function () {
+		        window.cabiApp.stations.trigger('distancesUpdated');
+		    });
+
+			window.cabiApp.stations.each(function(station,key,list){
+				var lat2 = station.get('lat');
+				var lon2 = station.get('long');
+				station.set('distance',window.cabiApp.utils.calculateDistance(position.coords.latitude, position.coords.longitude, lat2, lon2));
+				station.trigger('distanceUpdated');
+				completeUpdate();
+			});
+		}
 	},
 
 	geolocationError: function(error) {
@@ -64,6 +70,9 @@ window.cabiApp.utils = {
 	},
 
 	geolocationSuccess: function(position) {
+		window.cabiApp.settings.userLocation = position;
+		window.cabiApp.settings.userLocationString = window.cabiApp.utils.geoPositionToString(position);
+
 		var completeRender = _.after(window.cabiApp.stations.length, function () {
 			window.cabiApp.stations.order = 'distance';
 			window.cabiApp.stations.sort();
@@ -81,13 +90,17 @@ window.cabiApp.utils = {
 	},
 
 	completeAppRender: function() {
-		window.cabiApp.stationListView = new window.cabiApp.StationListView({collection: window.cabiApp.stations});
+		window.cabiApp.stationListView = new window.cabiApp.StationCollectionView({collection: window.cabiApp.stations});
 		window.cabiApp.cabiRouter = new window.cabiApp.CabiRouter();
 		if (!window.cabiApp.settings.appLoaded) {
 			Backbone.history.start({pushState: false});
 			window.cabiApp.settings.appLoaded = true;
 		}
 		$('#loading').hide();
+	},
+
+	geoPositionToString: function(position) {
+		return position.coords.latitude + "," + position.coords.longitude;
 	},
 
 	calculateDistance: function(lat1, lon1, lat2, lon2) {

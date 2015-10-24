@@ -1,9 +1,19 @@
 $(function() {
+
   window.cabiApp.settings = {
+
     appLoaded: false,
+
     reloadTriggerEl: $('.reload-trigger'),
-    fullBaseUrl: "http://cabi.nicostaple.com"
+
+    fullBaseUrl: "http://cabi.nicostaple.com",
+
+    userLocationObj: null,
+
+    userLocationString: ""
+
   };
+
   window.cabiApp.stations = new window.cabiApp.StationCollection;
   window.cabiApp.stations.reset(window.cabiApp.latestData);
   window.cabiApp.utils.renderInitialPage();

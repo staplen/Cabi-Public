@@ -9,7 +9,7 @@ window.cabiApp.CabiRouter = Backbone.Router.extend({
   	if ($('#stations-list-container').children().length === 0) {
 		window.cabiApp.stationListView.render().delegateEvents();
   	}
-	$('#station-counter-container').remove();
+	$('#station-single-container').remove();
 	if (window.stationId) {
 		var scrollToEl = $('#station-'+window.stationId);
 		$('#stations-list-container').show();
@@ -28,10 +28,9 @@ window.cabiApp.CabiRouter = Backbone.Router.extend({
   stationCounter: function(stationId) {
   	if (stationId) {
 	  	var stationModel = stationId === 'closest' ? window.cabiApp.stations.sort().first() : window.cabiApp.stations.get(stationId);
-		window.cabiApp.stationCounterView = new window.cabiApp.StationCounterView({model: stationModel});
-		window.cabiApp.stationCounterView.render();
+		window.cabiApp.stationSingleView = new window.cabiApp.StationSingleView({model: stationModel});
 		$('#stations-list-container, #geolocation-error').hide();
-		$('#station-counter-container').show();
+		$('#station-single-container').show();
 		window.stationId = stationId;
 		document.title = stationModel.get('name');
 		ga('send', 'pageview', {
