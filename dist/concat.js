@@ -248,7 +248,6 @@ window.cabiApp.utils = {
 	},
 
 	asyncUpdateTimeout: function() {
-		console.log('asyncUpdateTimeout');
 		setTimeout(function () {
 	        window.cabiApp.utils.triggerStationUpdate();
 	    }, 10000);
@@ -268,11 +267,7 @@ window.cabiApp.utils = {
 	},
 
 	updateStationDistancesSuccess: function(position) {
-		console.log('old position: ' + window.cabiApp.settings.userLocationString);
-		console.log('new position: ' + window.cabiApp.utils.geoPositionToString(position));
-
 		if (window.cabiApp.utils.geoPositionToString(position) !== window.cabiApp.settings.userLocationString) {
-			console.log('position changed');
 
 			window.cabiApp.settings.userLocation = position;
 			window.cabiApp.settings.userLocationString = position.coords.latitude + "," + position.coords.longitude;
@@ -288,9 +283,6 @@ window.cabiApp.utils = {
 				station.trigger('distanceUpdated');
 				completeUpdate();
 			});
-		}
-		else {
-			console.log('position UNchanged');
 		}
 	},
 
@@ -366,11 +358,8 @@ window.cabiApp.Station = Backbone.Model.extend({
 	},
 
 	initialize: function() {
-		this.on("all", function(eventName) {
-		  console.log(this.get('name') + ": " + eventName);
-		});
-		this.on("change:nbBikes change:nbEmptyDocks change:lastCommWithServer", function(eventName) {
-		  this.setViewVariables();
+		this.on("change:nbBikes change:nbEmptyDocks change:lastCommWithServer", function() {
+			this.setViewVariables();
 		});
 		this.setViewVariables();
 	},
@@ -511,7 +500,6 @@ window.cabiApp.StationSingleView = Backbone.View.extend({
 	},
 
 	render: function() {
-		console.log('rendering ' + this.model.get('name'));
 	    $(this.el).html(this.template(this.model.toJSON()));
 	    $('#content').append(this.el);
 	    $('#loading').hide();
@@ -533,14 +521,6 @@ window.cabiApp.StationCollection = Backbone.Collection.extend({
 	url: '/api/src/latest-station-data.json',
 
 	order: 'distance',
-
-	// parse: function(response) {
-	// 	var i = 0;
-	// 	_.each(response, function(){
-	// 		window.cabiApp.stations.add(response[i]);
-	// 		i++;
-	// 	});
-	// },
 
 	comparator: function(station) {
 		if (this.order === 'name') {
