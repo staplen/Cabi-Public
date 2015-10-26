@@ -118,4 +118,30 @@ $config['systems'] = array(
 		'timezone'		 => 'America/Chicago'
 	),
 
+	// 'mel' => array(
+	// 	'id'			 => 'mel',
+	// 	'data_url'       => 'http://www.melbournebikeshare.com.au/stationmap/data',
+	// 	'location_name'  => 'Melbourne',
+	// 	'system_name'	 => 'Melbourne Bike Share',
+	// 	'data_format'    => 'json2',
+	// 	'lat'            => -37.817466,
+	// 	'lon'            => 144.971681,
+	// 	'distance_units' => 'km',
+	// 	'country'		 => 'Australia',
+	// 	'timezone'		 => 'Australia/Melbourne'
+	// ),
+
+	'sfo' => array(
+		'id'			 => 'sfo',
+		'data_url'       => 'http://www.bayareabikeshare.com/stations/json',
+		'location_name'  => 'San Francisco',
+		'system_name'	 => 'Bay Area Bike Share',
+		'data_format'    => 'json',
+		'lat'            => 37.774929,
+		'lon'            => -122.419416,
+		'distance_units' => 'mi',
+		'country'		 => 'USA',
+		'timezone'		 => 'America/Los_Angeles'
+	),
+
 );
