@@ -234,8 +234,8 @@ window.cabiApp.utils = {
 	renderInitialPage: function() {
 		if (navigator.geolocation) {
 		  navigator.geolocation.getCurrentPosition(
-		    this.geolocationSuccess, 
-		    this.geolocationError,
+		    window.cabiApp.utils.geolocationSuccess, 
+		    window.cabiApp.utils.geolocationError,
 		    { enableHighAccuracy: true, timeout: 10000000, maximumAge: 120000 }
 		  );
 		}
@@ -322,11 +322,6 @@ window.cabiApp.utils = {
 
 	completeAppRender: function() {
 		window.cabiApp.stationListView = new window.cabiApp.StationCollectionView({collection: window.cabiApp.stations});
-		window.cabiApp.cabiRouter = new window.cabiApp.CabiRouter();
-		if (!window.cabiApp.settings.appLoaded) {
-			Backbone.history.start({pushState: false});
-			window.cabiApp.settings.appLoaded = true;
-		}
 		$('#loading').hide();
 	},
 
@@ -435,6 +430,13 @@ window.cabiApp.Station = Backbone.Model.extend({
 	}
 
 });
+
+
+window.cabiApp.System = Backbone.Model.extend({
+	
+	defaults: {}
+
+});
 // Station List View
 window.cabiApp.StationListView = Backbone.View.extend({
 
@@ -479,6 +481,7 @@ window.cabiApp.StationCollectionView = Backbone.View.extend({
 
 	initialize: function() {
 		this.listenTo(this.collection, "reset", this.render);
+		this.render();
 	}
 
 });
@@ -513,12 +516,64 @@ window.cabiApp.StationSingleView = Backbone.View.extend({
 	toggleStationList: function(e) {
 		e.preventDefault();
 		this.remove();
-		window.cabiApp.cabiRouter.navigate("", {trigger: true});
-	}});
+		window.cabiApp.cabiRouter.navigate(window.cabiApp.settings.activeSystemId, {trigger: true});
+	}
+});
+
+
+
+
+// System views
+window.cabiApp.SystemListView = Backbone.View.extend({
+
+	tagName: 'li',
+
+	initialize: function() {
+		this.template = _.template( $('#system-list-template').html() );
+	    this.listenTo(this.model, "change", this.render);
+	},
+
+	render: function() {
+	    $(this.el).html(this.template(this.model.toJSON()));
+		return this;
+	}
+
+});
+
+window.cabiApp.SystemCollectionView = Backbone.View.extend({
+
+	id: 'system-list',
+
+	tagName: 'ul',
+
+	render: function() {
+		var self = this;
+		this.$el.empty();
+
+		var completeRender = _.after(this.collection.length, function() {
+			$('#systems-list-container').html(self.$el);
+			$('#loading').hide();
+		});
+		this.collection.each( function(system) {
+			var systemListView = new window.cabiApp.SystemListView ({ model: system });
+			self.$el.append(systemListView.render().el);
+			completeRender();
+		});
+
+		return this;
+	},
+
+	initialize: function() {
+		this.listenTo(this.collection, "reset", this.render);
+	}
+
+});
 window.cabiApp.StationCollection = Backbone.Collection.extend({
 	model: window.cabiApp.Station,
 
-	url: '/api/src/latest-station-data.json',
+	url: function() {
+		return '/api/data/' + window.cabiApp.settings.activeSystemId + '/stations.json'
+	},
 
 	order: 'distance',
 
@@ -528,19 +583,59 @@ window.cabiApp.StationCollection = Backbone.Collection.extend({
         } else {
             return station.get('distance');
         }
+	},
+
+	initialize: function() {
+		this.on("reset", function() {
+			window.cabiApp.utils.updateStationDistances();
+		});
 	}
+});
+
+
+window.cabiApp.SystemCollection = Backbone.Collection.extend({
+	model: window.cabiApp.System,
+
+	url: '/api/src/systems.json',
+
+	comparator: function(system) {
+		return system.get('location_name');
+	}
+
 });
 window.cabiApp.CabiRouter = Backbone.Router.extend({
 
   routes: {
-    ""		  			  :      "stationList",
-    "stations/:stationId" :      "stationCounter"
+  	""								:      "systemList",
+    ":systemId"		  			    :      "stationList",
+    ":systemId/stations/:stationId" :      "stationCounter"
   },
 
-  stationList: function() {
+  systemList: function() {
+  	$('#systems-list-container').show();
+  	$('#station-single-container, #geolocation-error, #stations-list-container, #loading').hide();
+  },
+
+  stationList: function(systemId) {
+  	$('#systems-list-container').hide();
+
   	if ($('#stations-list-container').children().length === 0) {
-		window.cabiApp.stationListView.render().delegateEvents();
+  		$('#loading').show();
+  		window.cabiApp.settings.activeSystemId = systemId;
+  		window.cabiApp.stations = new window.cabiApp.StationCollection;
+		window.cabiApp.stations.fetch( { cache: false, success: window.cabiApp.utils.renderInitialPage } );
+
+		window.cabiApp.utils.asyncUpdateTimeout();
   	}
+
+  	if (window.cabiApp.settings.activeSystemId !== systemId) {
+  		$('#loading').show();
+  		window.stationId = false;
+  		$('body').scrollTop(0);
+  		window.cabiApp.settings.activeSystemId = systemId;
+  		window.cabiApp.stations.fetch( { cache: false, success: window.cabiApp.utils.renderInitialPage, reset: true } );
+  	}
+
 	$('#station-single-container').remove();
 	if (window.stationId) {
 		var scrollToEl = $('#station-'+window.stationId);
@@ -550,6 +645,7 @@ window.cabiApp.CabiRouter = Backbone.Router.extend({
 	else {
 		$('#stations-list-container').show();
 	}
+
 	document.title = "Cabi Glance - Station List";
 	ga('send', 'pageview', {
 	  'page': '/' + Backbone.history.fragment,
@@ -557,11 +653,14 @@ window.cabiApp.CabiRouter = Backbone.Router.extend({
 	});
   },
 
-  stationCounter: function(stationId) {
-  	if (stationId) {
-	  	var stationModel = stationId === 'closest' ? window.cabiApp.stations.sort().first() : window.cabiApp.stations.get(stationId);
+  stationCounter: function(systemId,stationId) {
+  	function completeRoute() {
+  		console.log('completeRoute');
+  		var stationModel = stationId === 'closest' ? window.cabiApp.stations.sort().first() : window.cabiApp.stations.get(stationId);
+  		if (!stationModel) { alert('Station not found.'); }
+  		if (window.cabiApp.stationSingleView) { window.cabiApp.stationSingleView.remove(); }
 		window.cabiApp.stationSingleView = new window.cabiApp.StationSingleView({model: stationModel});
-		$('#stations-list-container, #geolocation-error').hide();
+		$('#stations-list-container, #geolocation-error, #systems-list-container').hide();
 		$('#station-single-container').show();
 		window.stationId = stationId;
 		document.title = stationModel.get('name');
@@ -569,10 +668,33 @@ window.cabiApp.CabiRouter = Backbone.Router.extend({
 		  'page': '/' + Backbone.history.fragment,
 		  'title': stationModel.get('name')
 		});
-	}
-	else {
-		stationList();
-	}
+  	}
+
+  	function startRoute() {
+  		if (stationId) {
+	  		if (!window.cabiApp.stations) {
+	  			window.cabiApp.settings.activeSystemId = systemId;
+		  		window.cabiApp.stations = new window.cabiApp.StationCollection;
+				window.cabiApp.stations.fetch( { cache: false, success: completeRoute } );
+	  		}
+	  		else {
+			  	completeRoute();
+	  		}
+		}
+		else {
+			stationList();
+		}
+  	}
+
+  	if (window.cabiApp.settings.activeSystemId !== systemId && window.cabiApp.stations) {
+  		window.cabiApp.settings.activeSystemId = systemId;
+  		window.cabiApp.stations.fetch( { cache: false, success: startRoute, reset: true } );
+  	}
+  	else {
+  		startRoute();
+  	}
+
+  	
   }
 
 });
@@ -588,24 +710,24 @@ $(function() {
 
     userLocationObj: null,
 
-    userLocationString: ""
+    userLocationString: "",
+
+    activeSystemId: ""
 
   };
 
-  window.cabiApp.stations = new window.cabiApp.StationCollection;
-  window.cabiApp.stations.reset(window.cabiApp.latestData);
-  window.cabiApp.utils.renderInitialPage();
 
-  window.cabiApp.stations.on('reset', function() {
-    window.cabiApp.utils.updateStationDistances();
-  });
 
-  window.cabiApp.settings.reloadTriggerEl.click(function(e) {
-    e.preventDefault();
-    window.cabiApp.utils.triggerStationUpdate();
-  });
+  window.cabiApp.systems = new window.cabiApp.SystemCollection;
+  window.cabiApp.systemsView = new window.cabiApp.SystemCollectionView({ collection: window.cabiApp.systems });
+  window.cabiApp.systems.reset(window.cabiApp.systemsData);
 
-  window.cabiApp.utils.asyncUpdateTimeout();
+  window.cabiApp.cabiRouter = new window.cabiApp.CabiRouter();
+  if (!window.cabiApp.settings.appLoaded) {
+    Backbone.history.start({pushState: false});
+    window.cabiApp.settings.appLoaded = true;
+  }
+
 });
 
 $(window).load(function() {

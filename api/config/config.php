@@ -18,12 +18,90 @@ $config['timezone']     =   'America/New_York';
 $config['locale']       =   'en-US';
 $config['environment']  =   'dev';
 
-$config['site_url']     =   'http://localhost:8888';
+$config['systems'] = array(
 
-$config['system_url']   =   'http://www.capitalbikeshare.com/data/stations/bikeStations.xml'; /* DC */
-// $config['system_url']   =   'https://secure.niceridemn.org/data2/bikeStations.xml'; /* MSP */
-// $config['system_url']   =   'http://www.bikesharetoronto.com/data/stations/bikeStations.xml'; /* Toronto */
-// $config['system_url']   =   'http://montreal.bixi.com/data/bikeStations.xml'; /* Montreal */
-// $config['system_url']   =   ''; /* Ottawa */
-// $config['system_url']   =   'http://thehubway.com/data/stations/bikeStations.xml'; /* Boston */
-// $config['system_url']   =   'http://www.tfl.gov.uk/tfl/syndication/feeds/cycle-hire/livecyclehireupdates.xml'; /* London */
+	'dca' => array(
+		'id'			 => 'dca',
+		'data_url'       => 'http://www.capitalbikeshare.com/data/stations/bikeStations.xml',
+		'location_name'  => 'Washington, DC',
+		'system_name'	 => 'Capital Bikeshare',
+		'data_format'    => 'xml',
+		'lat'            => 38.907192,
+		'lon'            => -77.036871,
+		'distance_units' => 'mi',
+		'country'		 => 'USA'
+	),
+
+	'msp' => array(
+		'id'			 => 'msp',
+		'data_url'       => 'https://secure.niceridemn.org/data2/bikeStations.xml',
+		'location_name'  => 'Minneapolis',
+		'system_name'	 => 'Nice Ride',
+		'data_format'    => 'xml',
+		'lat'            => 44.977753,
+		'lon'            => -93.265011,
+		'distance_units' => 'mi',
+		'country'		 => 'USA'
+	),
+
+	'yyz' => array(
+		'id'			 => 'yyz',
+		'data_url'       => 'http://www.bikesharetoronto.com/data/stations/bikeStations.xml',
+		'location_name'  => 'Toronto',
+		'system_name'	 => 'Bike Share Toronto',
+		'data_format'    => 'xml',
+		'lat'            => 43.653226,
+		'lon'            => -79.383184,
+		'distance_units' => 'km',
+		'country'		 => 'Canada'
+	),
+
+	'yul' => array(
+		'id'			 => 'yul',
+		'data_url'       => 'http://montreal.bixi.com/data/bikeStations.xml',
+		'location_name'  => 'Montreal',
+		'system_name'	 => 'BIXI',
+		'data_format'    => 'xml',
+		'lat'            => 45.501689,
+		'lon'            => -73.567256,
+		'distance_units' => 'km',
+		'country'		 => 'Canada'
+	),
+
+	'bos' => array(
+		'id'			 => 'bos',
+		'data_url'       => 'http://thehubway.com/data/stations/bikeStations.xml',
+		'location_name'  => 'Boston',
+		'system_name'	 => 'Hubway',
+		'data_format'    => 'xml',
+		'lat'            => 42.360082,
+		'lon'            => -71.058880,
+		'distance_units' => 'mi',
+		'country'		 => 'USA'
+	),
+
+	'lhr' => array(
+		'id'			 => 'lhr',
+		'data_url'       => 'http://www.tfl.gov.uk/tfl/syndication/feeds/cycle-hire/livecyclehireupdates.xml',
+		'location_name'  => 'London',
+		'system_name'	 => 'Santander Cycles',
+		'data_format'    => 'xml',
+		'lat'            => 51.507351,
+		'lon'            => -0.127758,
+		'distance_units' => 'mi',
+		'country'		 => 'UK'
+	),
+
+	'jfk' => array(
+		'id'			 => 'jfk',
+		'data_url'       => 'http://www.citibikenyc.com/stations/json',
+		'location_name'  => 'New York City',
+		'system_name'	 => 'Citi Bike',
+		'data_format'    => 'json',
+		'lat'            => 40.712784,
+		'lon'            => -74.005941,
+		'distance_units' => 'mi',
+		'country'		 => 'USA'
+	),
+
+);

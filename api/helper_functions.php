@@ -1,14 +1,15 @@
 <?php
 
 // Get and parse CaBi XML station data
-function getStationData($json = false) {
+function getStationData($system_id) {
 	global $config;
 
 	$stations = array();
-	$xml = new fXML($config['system_url']);
 
-	foreach ($xml->xpath("//station") as $station) {
-		if ($json) {
+	if ($config['systems'][$system_id]['data_format'] === 'xml') {
+		$xml = new fXML($config['systems'][$system_id]['data_url']);
+
+		foreach ($xml->xpath("//station") as $station) {
 			array_push($stations, [
 				'id' 				 => $station->id,
 				'name' 				 => $station->name,
@@ -26,9 +27,6 @@ function getStationData($json = false) {
 				'nbEmptyDocks' 		 => $station->nbEmptyDocks,
 				'latestUpdateTime'   => $station->latestUpdateTime,
 			]);
-		}
-		else {
-			$stations[$station->id] = $station;
 		}
 	}
 

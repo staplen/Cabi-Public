@@ -10,24 +10,24 @@ $(function() {
 
     userLocationObj: null,
 
-    userLocationString: ""
+    userLocationString: "",
+
+    activeSystemId: ""
 
   };
 
-  window.cabiApp.stations = new window.cabiApp.StationCollection;
-  window.cabiApp.stations.reset(window.cabiApp.latestData);
-  window.cabiApp.utils.renderInitialPage();
 
-  window.cabiApp.stations.on('reset', function() {
-    window.cabiApp.utils.updateStationDistances();
-  });
 
-  window.cabiApp.settings.reloadTriggerEl.click(function(e) {
-    e.preventDefault();
-    window.cabiApp.utils.triggerStationUpdate();
-  });
+  window.cabiApp.systems = new window.cabiApp.SystemCollection;
+  window.cabiApp.systemsView = new window.cabiApp.SystemCollectionView({ collection: window.cabiApp.systems });
+  window.cabiApp.systems.reset(window.cabiApp.systemsData);
 
-  window.cabiApp.utils.asyncUpdateTimeout();
+  window.cabiApp.cabiRouter = new window.cabiApp.CabiRouter();
+  if (!window.cabiApp.settings.appLoaded) {
+    Backbone.history.start({pushState: false});
+    window.cabiApp.settings.appLoaded = true;
+  }
+
 });
 
 $(window).load(function() {
