@@ -101,7 +101,21 @@ $config['systems'] = array(
 		'lat'            => 40.712784,
 		'lon'            => -74.005941,
 		'distance_units' => 'mi',
-		'country'		 => 'USA'
+		'country'		 => 'USA',
+		'timezone'		 => 'America/New_York'
+	),
+
+	'ord' => array(
+		'id'			 => 'ord',
+		'data_url'       => 'http://www.divvybikes.com/stations/json',
+		'location_name'  => 'Chicago',
+		'system_name'	 => 'Divvy',
+		'data_format'    => 'json',
+		'lat'            => 41.878114,
+		'lon'            => -87.629798,
+		'distance_units' => 'mi',
+		'country'		 => 'USA',
+		'timezone'		 => 'America/Chicago'
 	),
 
 );

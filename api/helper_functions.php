@@ -29,13 +29,32 @@ function getStationData($system_id) {
 			]);
 		}
 	}
+	else if ($config['systems'][$system_id]['data_format'] === 'json') {
+		$json_data = fJSON::decode(file_get_contents($config['systems'][$system_id]['data_url']));
+
+		foreach ($json_data->stationBeanList as $station) {
+			array_push($stations, [
+				'id' 				    => $station->id,
+				'name' 				    => $station->stationName,
+				'terminalName' 		    => null,
+				'lastCommWithServer'    => strtotime($station->lastCommunicationTime) * 1000,
+				'lat' 				    => $station->latitude,
+				'long' 				    => $station->longitude,
+				'installed' 		    => $station->statusKey,
+				'locked' 			    => $station->statusValue === 'In Service' ? false : true,
+				'installDate' 		    => null,
+				'removalDate' 		    => null,
+				'temporary' 		    => false,
+				'public' 			    => true,
+				'nbBikes' 			    => $station->availableBikes,
+				'nbEmptyDocks' 		    => $station->availableDocks,
+				'latestUpdateTime'      => strtotime($station->lastCommunicationTime),
+				'lastCommunicationTime' => $station->lastCommunicationTime
+			]);
+		}
+	}
 
 	return $stations;
-}
-
-function getRawStationData() {
-	$xml = file_get_contents('http://www.capitalbikeshare.com/data/stations/bikeStations.xml');
-	return $xml;
 }
 
 ?>
