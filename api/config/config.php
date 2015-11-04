@@ -144,4 +144,17 @@ $config['systems'] = array(
 		'timezone'		 => 'America/Los_Angeles'
 	),
 
+	'phl' => array(
+		'id'			 => 'phl',
+		'data_url'       => 'https://api.phila.gov/bike-share-stations/v1',
+		'location_name'  => 'Philadelphia',
+		'system_name'	 => 'Indego',
+		'data_format'    => 'json3',
+		'lat'            => 39.952584,
+		'lon'            => -75.165222,
+		'distance_units' => 'mi',
+		'country'		 => 'USA',
+		'timezone'		 => 'America/New_York'
+	),
+
 );

@@ -53,6 +53,30 @@ function getStationData($system_id) {
 			]);
 		}
 	}
+	else if ($config['systems'][$system_id]['data_format'] === 'json3') {
+		$json_data = fJSON::decode(file_get_contents($config['systems'][$system_id]['data_url']));
+
+		foreach ($json_data->features as $station) {
+			array_push($stations, [
+				'id' 				    => $station->properties->kioskId,
+				'name' 				    => $station->properties->name,
+				'terminalName' 		    => null,
+				'lastCommWithServer'    => null,
+				'lat' 				    => $station->geometry->coordinates[1],
+				'long' 				    => $station->geometry->coordinates[0],
+				'installed' 		    => null,
+				'locked' 			    => $station->properties->kioskPublicStatus === 'Active' ? false : true,
+				'installDate' 		    => null,
+				'removalDate' 		    => null,
+				'temporary' 		    => false,
+				'public' 			    => true,
+				'nbBikes' 			    => $station->properties->bikesAvailable,
+				'nbEmptyDocks' 		    => $station->properties->docksAvailable,
+				'latestUpdateTime'      => null,
+				'lastCommunicationTime' => null
+			]);
+		}
+	}
 
 	return $stations;
 }
