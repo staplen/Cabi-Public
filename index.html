@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" sizes="114x114" href="img/ios/icon@2x.png" />
     <link rel="apple-touch-icon" sizes="144x144" href="img/ios/icon-72@2x.png" />
     
-    <link href="dist/all.css" rel="stylesheet">
+    <link href="dist/concat.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -116,7 +116,13 @@
     </script>
 
     <script id="system-list-template" type="text/template">
-      <a href="#/<%= id %>"><%= location_name %> (<%= system_name %>)</a>
+
+      <a href="#/<%= id %>">
+        <div class="col-md-12">
+          <p><%= location_name %> <span><%= system_name %></span></p>
+        </div><!-- END .col-md-12 -->
+      </a>
+      
     </script>
 
   </body>

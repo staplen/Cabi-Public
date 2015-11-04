@@ -9,6 +9,12 @@ window.cabiApp.CabiRouter = Backbone.Router.extend({
   systemList: function() {
   	$('#systems-list-container').show();
   	$('#station-single-container, #geolocation-error, #stations-list-container, #loading').hide();
+
+    document.title = "Cabi Glance - System List";
+    ga('send', 'pageview', {
+      'page': '/' + Backbone.history.fragment,
+      'title': "Cabi Glance - System List"
+    });
   },
 
   stationList: function(systemId) {
@@ -31,21 +37,21 @@ window.cabiApp.CabiRouter = Backbone.Router.extend({
   		window.cabiApp.stations.fetch( { cache: false, success: window.cabiApp.utils.renderInitialPage, reset: true } );
   	}
 
-	$('#station-single-container').remove();
-	if (window.stationId) {
-		var scrollToEl = $('#station-'+window.stationId);
-		$('#stations-list-container').show();
-		$('body').scrollTo( scrollToEl, 0 );
-	}
-	else {
-		$('#stations-list-container').show();
-	}
+  	$('#station-single-container').remove();
+  	if (window.stationId) {
+  		var scrollToEl = $('#station-'+window.stationId);
+  		$('#stations-list-container').show();
+  		$('body').scrollTo( scrollToEl, 0 );
+  	}
+  	else {
+  		$('#stations-list-container').show();
+  	}
 
-	document.title = "Cabi Glance - Station List";
-	ga('send', 'pageview', {
-	  'page': '/' + Backbone.history.fragment,
-	  'title': "Cabi Glance - Station List"
-	});
+  	document.title = "Cabi Glance - Station List";
+  	ga('send', 'pageview', {
+  	  'page': '/' + Backbone.history.fragment,
+  	  'title': "Cabi Glance - Station List"
+  	});
   },
 
   stationCounter: function(systemId,stationId) {
