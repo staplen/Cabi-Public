@@ -1,14 +1,14 @@
 window.cabiApp.CabiRouter = Backbone.Router.extend({
 
   routes: {
-  	""								:      "systemList",
-    ":systemId"		  			    :      "stationList",
-    ":systemId/stations/:stationId" :      "stationCounter"
+  	""							                : "systemList",
+    ":systemId"		  			          : "stationList",
+    ":systemId/stations/:stationId" : "stationCounter"
   },
 
   systemList: function() {
   	$('#systems-list-container').show();
-  	$('#station-single-container, #geolocation-error, #stations-list-container, #loading').hide();
+  	$('#station-single-container, #geolocation-error, #stations-list-container, #loading, #cookie-found').hide();
 
     document.title = "Cabi Glance - System List";
     ga('send', 'pageview', {
@@ -23,10 +23,11 @@ window.cabiApp.CabiRouter = Backbone.Router.extend({
   	if ($('#stations-list-container').children().length === 0) {
   		$('#loading').show();
   		window.cabiApp.settings.activeSystemId = systemId;
+      window.cabiApp.utils.setSystemCookie(systemId);
   		window.cabiApp.stations = new window.cabiApp.StationCollection;
-		window.cabiApp.stations.fetch( { cache: false, success: window.cabiApp.utils.renderInitialPage } );
+  		window.cabiApp.stations.fetch( { cache: false, success: window.cabiApp.utils.renderInitialPage } );
 
-		window.cabiApp.utils.asyncUpdateTimeout();
+  		window.cabiApp.utils.asyncUpdateTimeout();
   	}
 
   	if (window.cabiApp.settings.activeSystemId !== systemId) {
@@ -34,6 +35,7 @@ window.cabiApp.CabiRouter = Backbone.Router.extend({
   		window.stationId = false;
   		$('body').scrollTop(0);
   		window.cabiApp.settings.activeSystemId = systemId;
+      window.cabiApp.utils.setSystemCookie(systemId);
   		window.cabiApp.stations.fetch( { cache: false, success: window.cabiApp.utils.renderInitialPage, reset: true } );
   	}
 
@@ -56,39 +58,40 @@ window.cabiApp.CabiRouter = Backbone.Router.extend({
 
   stationCounter: function(systemId,stationId) {
   	function completeRoute() {
-  		console.log('completeRoute');
   		var stationModel = stationId === 'closest' ? window.cabiApp.stations.sort().first() : window.cabiApp.stations.get(stationId);
   		if (!stationModel) { alert('Station not found.'); }
   		if (window.cabiApp.stationSingleView) { window.cabiApp.stationSingleView.remove(); }
-		window.cabiApp.stationSingleView = new window.cabiApp.StationSingleView({model: stationModel});
-		$('#stations-list-container, #geolocation-error, #systems-list-container').hide();
-		$('#station-single-container').show();
-		window.stationId = stationId;
-		document.title = stationModel.get('name');
-		ga('send', 'pageview', {
-		  'page': '/' + Backbone.history.fragment,
-		  'title': stationModel.get('name')
-		});
+  		window.cabiApp.stationSingleView = new window.cabiApp.StationSingleView({model: stationModel});
+  		$('#stations-list-container, #geolocation-error, #systems-list-container, #cookie-found').hide();
+  		$('#station-single-container').show();
+  		window.stationId = stationId;
+  		document.title = stationModel.get('name');
+  		ga('send', 'pageview', {
+  		  'page': '/' + Backbone.history.fragment,
+  		  'title': stationModel.get('name')
+  		});
   	}
 
   	function startRoute() {
   		if (stationId) {
 	  		if (!window.cabiApp.stations) {
 	  			window.cabiApp.settings.activeSystemId = systemId;
+          window.cabiApp.utils.setSystemCookie(systemId);
 		  		window.cabiApp.stations = new window.cabiApp.StationCollection;
-				window.cabiApp.stations.fetch( { cache: false, success: completeRoute } );
+  				window.cabiApp.stations.fetch( { cache: false, success: completeRoute } );
 	  		}
 	  		else {
 			  	completeRoute();
 	  		}
-		}
-		else {
-			stationList();
-		}
+  		}
+  		else {
+  			stationList();
+  		}
   	}
 
   	if (window.cabiApp.settings.activeSystemId !== systemId && window.cabiApp.stations) {
   		window.cabiApp.settings.activeSystemId = systemId;
+      window.cabiApp.utils.setSystemCookie(systemId);
   		window.cabiApp.stations.fetch( { cache: false, success: startRoute, reset: true } );
   	}
   	else {

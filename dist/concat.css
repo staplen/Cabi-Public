@@ -51,7 +51,7 @@
 
 /* Page formatting
 ---------------------------- */
-#geolocation-error {
+#geolocation-error, #cookie-found {
 	display: none;
 }
 #content #loading {
@@ -109,6 +109,9 @@
     font-size: 20px;
     font-weight: 600;
     padding: 25px 15px;
+}
+#cookie-found a {
+	font-weight: bold;
 }
 
 /*

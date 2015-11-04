@@ -6,6 +6,8 @@ $(function() {
 
     reloadTriggerEl: $('.reload-trigger'),
 
+    cookieFoundAlert: $('#cookie-found'),
+
     fullBaseUrl: "http://cabi.nicostaple.com",
 
     userLocationObj: null,
@@ -26,6 +28,11 @@ $(function() {
   if (!window.cabiApp.settings.appLoaded) {
     Backbone.history.start({pushState: false});
     window.cabiApp.settings.appLoaded = true;
+    if (Cookies.get('cabi_activeSystemId') && !Backbone.history.fragment) {
+      window.cabiApp.cabiRouter.navigate(Cookies.get('cabi_activeSystemId'), {trigger: true});
+      $('span',window.cabiApp.settings.cookieFoundAlert).text(Cookies.get('cabi_activeSystemName'));
+      window.cabiApp.settings.cookieFoundAlert.slideDown();
+    }
   }
 
 });
@@ -46,6 +53,11 @@ $(window).load(function() {
     var width = $(window).width();
     $('.station-banner').width(width);
   }
+
+  $('.hash-link').click(function(e) {
+    e.preventDefault();
+    window.cabiApp.utils.processHashLink(e);
+  });
 
   $(window).resize(function() {
     setWrapperHeight();

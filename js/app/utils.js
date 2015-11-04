@@ -113,5 +113,16 @@ window.cabiApp.utils = {
 		var miles = dist * 60 * 1.1515;
 
 		return miles;
+	},
+
+	setSystemCookie: function(systemId) {
+		var systemName = window.cabiApp.systems.findWhere({id: systemId}).get('system_name');
+		Cookies.set('cabi_activeSystemId', systemId);
+		Cookies.set('cabi_activeSystemName', systemName);
+	},
+
+	processHashLink: function(event) {
+		var href = $(event.target).attr('href');
+		window.cabiApp.cabiRouter.navigate(href, {trigger: true});
 	}
 }

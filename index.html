@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" sizes="114x114" href="img/ios/icon@2x.png" />
     <link rel="apple-touch-icon" sizes="144x144" href="img/ios/icon-72@2x.png" />
     
-    <link href="dist/concat.css" rel="stylesheet">
+    <link href="dist/all.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -37,6 +37,8 @@
     <![endif]-->
 
     <div class="alert alert-warning cabi-alert" role="alert" id="geolocation-error">There was an error determining your location so stations are displayed alphabetically. Please enable location access for Cabi Glance to display stations in geographic order.</div>
+
+    <div class="alert alert-info cabi-alert" role="alert" id="cookie-found">Welcome back to <span>&nbsp;</span>! <a href="/" class="hash-link">Change systems <i class="fa fa-long-arrow-right"></i></a></div>
 
     <div id="content">
       <div id="loading">
@@ -69,7 +71,7 @@
     </div>
 
     <script>window.cabiApp = {};</script>
-    <script src="dist/concat.js"></script>
+    <script src="dist/all.js"></script>
     <script src="api/data/systems.js"></script>
     
     <!-- Backbone templates -->
