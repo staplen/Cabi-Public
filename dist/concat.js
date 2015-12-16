@@ -814,7 +814,6 @@ window.cabiApp.CabiRouter = Backbone.Router.extend({
 
   stationCounter: function(systemId,stationId) {
   	function completeRoute() {
-  		console.log('completeRoute');
   		var stationModel = stationId === 'closest' ? window.cabiApp.stations.sort().first() : window.cabiApp.stations.get(stationId);
   		if (!stationModel) { alert('Station not found.'); }
   		if (window.cabiApp.stationSingleView) { window.cabiApp.stationSingleView.remove(); }
@@ -890,7 +889,6 @@ $(function() {
     Backbone.history.start({pushState: false});
     window.cabiApp.settings.appLoaded = true;
     if (Cookies.get('cabi_activeSystemId') && !Backbone.history.fragment) {
-      console.log('cabi cookie found: ' + Cookies.get('cabi_activeSystemId'));
       window.cabiApp.cabiRouter.navigate(Cookies.get('cabi_activeSystemId'), {trigger: true});
       $('span',window.cabiApp.settings.cookieFoundAlert).text(Cookies.get('cabi_activeSystemName'));
       window.cabiApp.settings.cookieFoundAlert.slideDown();
