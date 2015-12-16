@@ -26,7 +26,7 @@ foreach ($config['systems'] as $key => $value) {
 	$json = SYSROOT . DS . 'data' . DS . $key . DS . 'stations.json';
 	file_put_contents($json, fJSON::encode($stationData), LOCK_EX);
 
-	echo $value['location_name'] . " data successfully updated.\n";
+	echo $value['location_name'] . ' (' . $value['system_name'] . ") data successfully updated.\n";
 
 }
 
