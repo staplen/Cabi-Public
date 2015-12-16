@@ -12,6 +12,7 @@ gulp.task('js-fef', function(){
 	  		'js/lib/jquery.scrollTo-1.4.6.min.js',
 	  		'js/lib/jquery.timeago.js',
             'js/lib/bootstrap.min.js',
+            'js/lib/js.cookie.js',
 	  		'js/app/utils.js',
 	  		'js/app/models.js',
 	  		'js/app/views.js',

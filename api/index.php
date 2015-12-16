@@ -19,7 +19,6 @@ require_once (CONFIG_DIR . DS . 'config.php');
 require_once (CONFIG_DIR . DS . 'autoload.php');
 require_once (CONFIG_DIR . DS . 'environment.php');
 require_once (CONFIG_DIR . DS . 'locale.php');
-define('URL_ROOT',        $config['site_url']);
 
 
 /* Get queries
