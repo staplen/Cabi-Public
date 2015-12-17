@@ -37,7 +37,7 @@
 
 /* Page formatting
 ---------------------------- */
-#geolocation-error {
+#geolocation-error, #cookie-found {
 	display: none;
 }
 #content #loading {
@@ -80,6 +80,10 @@
 	top: 0;
 	right: 0;
 }
+.systems-btn {
+	top: 64px;
+	right: 0;
+}
 
 .cabi-alert {
 	font-size: 16px;
@@ -91,6 +95,9 @@
     font-size: 20px;
     font-weight: 600;
     padding: 25px 15px;
+}
+#cookie-found a {
+	font-weight: bold;
 }
 
 /*
@@ -111,17 +118,17 @@
 #stations-list-container {
 	padding: 0 20px;
 }
-#station-list {
+#station-list, #system-list {
 	list-style: none;
 	margin: 0;
 	padding: 0;
 }
-#station-list .station-item {
+#station-list .station-item, #system-list li {
 	border-bottom: 1px solid #000;
 	padding: 15px 0;
 	position: relative;
 }
-#station-list .station-item a {
+#station-list .station-item a, #system-list li a {
 	color: #000;
 	color: rgba(0,0,0,0.7);
 	display: block;
@@ -134,10 +141,13 @@
 	width: 20px;
 }
 #station-list .station-item a:hover,
-#station-list .station-item a:focus {
+#station-list .station-item a:focus,
+#system-list li a:hover,
+#system-list li a:focus {
 	text-decoration: none;
 }
-#station-list .station-item a:hover {
+#station-list .station-item a:hover,
+#system-list li a:hover {
 	color: rgba(0,0,0,1);
 }
 #station-list .station-item span.distance, #station-list .station-item span.time {
@@ -212,7 +222,7 @@
 }
 
 .station-lock-overlay {
-	background: url(../img/wet_snow_@2X-90.png) repeat 0 0;
+	background: rgba(255,255,255,.9);
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -222,9 +232,34 @@
 .station-lock-overlay h1 {
 	color: #333;
 	font-family: inherit;
+    font-weight: 700;
 	text-align: center;
+	text-transform: uppercase;
+    letter-spacing: 1px;
 	padding-top: 14px;
 }
+
+
+
+/*
+| 
+| SYSTEM LISTING
+|
+#####################################################*/
+#system-list li {
+	padding: 20px 0;
+}
+#system-list li a p {
+	font-size: 35px;
+	font-weight: 700;
+	line-height: 28px;
+	margin: 0;
+}
+#system-list li a p span {
+	font-size: 25px;
+	font-weight: 300;
+}
+
 
 /*
 | 

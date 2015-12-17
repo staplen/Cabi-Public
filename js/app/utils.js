@@ -3,8 +3,8 @@ window.cabiApp.utils = {
 	renderInitialPage: function() {
 		if (navigator.geolocation) {
 		  navigator.geolocation.getCurrentPosition(
-		    this.geolocationSuccess, 
-		    this.geolocationError,
+		    window.cabiApp.utils.geolocationSuccess, 
+		    window.cabiApp.utils.geolocationError,
 		    { enableHighAccuracy: true, timeout: 10000000, maximumAge: 120000 }
 		  );
 		}
@@ -91,11 +91,6 @@ window.cabiApp.utils = {
 
 	completeAppRender: function() {
 		window.cabiApp.stationListView = new window.cabiApp.StationCollectionView({collection: window.cabiApp.stations});
-		window.cabiApp.cabiRouter = new window.cabiApp.CabiRouter();
-		if (!window.cabiApp.settings.appLoaded) {
-			Backbone.history.start({pushState: false});
-			window.cabiApp.settings.appLoaded = true;
-		}
 		$('#loading').hide();
 	},
 
@@ -118,5 +113,16 @@ window.cabiApp.utils = {
 		var miles = dist * 60 * 1.1515;
 
 		return miles;
+	},
+
+	setSystemCookie: function(systemId) {
+		var systemName = window.cabiApp.systems.findWhere({id: systemId}).get('system_name');
+		Cookies.set('cabi_activeSystemId', systemId);
+		Cookies.set('cabi_activeSystemName', systemName);
+	},
+
+	processHashLink: function(event) {
+		var href = $(event.target).attr('href');
+		window.cabiApp.cabiRouter.navigate(href, {trigger: true});
 	}
 }

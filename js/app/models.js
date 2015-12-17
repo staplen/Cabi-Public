@@ -82,3 +82,10 @@ window.cabiApp.Station = Backbone.Model.extend({
 	}
 
 });
+
+
+window.cabiApp.System = Backbone.Model.extend({
+	
+	defaults: {}
+
+});

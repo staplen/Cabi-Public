@@ -2,6 +2,6 @@ api/tmp
 .htaccess
 api/.htaccess
 _depricated
-api/src
+api/data/**
 node_modules
 dist/

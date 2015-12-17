@@ -42,6 +42,7 @@ window.cabiApp.StationCollectionView = Backbone.View.extend({
 
 	initialize: function() {
 		this.listenTo(this.collection, "reset", this.render);
+		this.render();
 	}
 
 });
@@ -76,5 +77,55 @@ window.cabiApp.StationSingleView = Backbone.View.extend({
 	toggleStationList: function(e) {
 		e.preventDefault();
 		this.remove();
-		window.cabiApp.cabiRouter.navigate("", {trigger: true});
-	}});
+		window.cabiApp.cabiRouter.navigate(window.cabiApp.settings.activeSystemId, {trigger: true});
+	}
+});
+
+
+
+
+// System views
+window.cabiApp.SystemListView = Backbone.View.extend({
+
+	tagName: 'li',
+
+	initialize: function() {
+		this.template = _.template( $('#system-list-template').html() );
+	    this.listenTo(this.model, "change", this.render);
+	},
+
+	render: function() {
+	    $(this.el).html(this.template(this.model.toJSON()));
+		return this;
+	}
+
+});
+
+window.cabiApp.SystemCollectionView = Backbone.View.extend({
+
+	id: 'system-list',
+
+	tagName: 'ul',
+
+	render: function() {
+		var self = this;
+		this.$el.empty();
+
+		var completeRender = _.after(this.collection.length, function() {
+			$('#systems-list-container').html(self.$el);
+			$('#loading').hide();
+		});
+		this.collection.each( function(system) {
+			var systemListView = new window.cabiApp.SystemListView ({ model: system });
+			self.$el.append(systemListView.render().el);
+			completeRender();
+		});
+
+		return this;
+	},
+
+	initialize: function() {
+		this.listenTo(this.collection, "reset", this.render);
+	}
+
+});

@@ -6,28 +6,35 @@ $(function() {
 
     reloadTriggerEl: $('.reload-trigger'),
 
+    cookieFoundAlert: $('#cookie-found'),
+
     fullBaseUrl: "http://cabi.nicostaple.com",
 
     userLocationObj: null,
 
-    userLocationString: ""
+    userLocationString: "",
+
+    activeSystemId: ""
 
   };
 
-  window.cabiApp.stations = new window.cabiApp.StationCollection;
-  window.cabiApp.stations.reset(window.cabiApp.latestData);
-  window.cabiApp.utils.renderInitialPage();
 
-  window.cabiApp.stations.on('reset', function() {
-    window.cabiApp.utils.updateStationDistances();
-  });
 
-  window.cabiApp.settings.reloadTriggerEl.click(function(e) {
-    e.preventDefault();
-    window.cabiApp.utils.triggerStationUpdate();
-  });
+  window.cabiApp.systems = new window.cabiApp.SystemCollection;
+  window.cabiApp.systemsView = new window.cabiApp.SystemCollectionView({ collection: window.cabiApp.systems });
+  window.cabiApp.systems.reset(window.cabiApp.systemsData);
 
-  window.cabiApp.utils.asyncUpdateTimeout();
+  window.cabiApp.cabiRouter = new window.cabiApp.CabiRouter();
+  if (!window.cabiApp.settings.appLoaded) {
+    Backbone.history.start({pushState: false});
+    window.cabiApp.settings.appLoaded = true;
+    if (Cookies.get('cabi_activeSystemId') && !Backbone.history.fragment) {
+      window.cabiApp.cabiRouter.navigate(Cookies.get('cabi_activeSystemId'), {trigger: true});
+      $('span',window.cabiApp.settings.cookieFoundAlert).text(Cookies.get('cabi_activeSystemName'));
+      window.cabiApp.settings.cookieFoundAlert.slideDown();
+    }
+  }
+
 });
 
 $(window).load(function() {
@@ -46,6 +53,11 @@ $(window).load(function() {
     var width = $(window).width();
     $('.station-banner').width(width);
   }
+
+  $('.hash-link').click(function(e) {
+    e.preventDefault();
+    window.cabiApp.utils.processHashLink(e);
+  });
 
   $(window).resize(function() {
     setWrapperHeight();
