@@ -150,6 +150,14 @@
 #system-list li a:hover {
 	color: rgba(0,0,0,1);
 }
+#station-list .station-item a.subway {
+	color: rgba(0,0,0,1);
+	cursor: default;
+}
+#station-list .station-item a.subway .time-distance,
+#station-list .station-item a.subway .text {
+	color: rgba(0,0,0,0.7);
+}
 #station-list .station-item span.distance, #station-list .station-item span.time {
 	background: rgba(0,0,0,0.4);
 	border-radius: 2px;
@@ -264,7 +272,12 @@
 .SV {
 	border-bottom: 3px solid #8E8E8E;
 }
+.--, .No {
+	border-bottom: 3px dashed #bbb;
+	color: #bbb;
+}
 .no-trains {
+	color: #bbb;
 	text-transform: uppercase;
 }
 

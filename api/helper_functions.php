@@ -110,12 +110,41 @@ function getStationData($system_id) {
 			}
 		}
 	}
-	else if ($config['systems'][$system_id]['type'] === 'subway') {
+	else if ($config['systems'][$system_id]['type'] === 'subway' && $config['systems'][$system_id]['id'] === 'wmata') {
+		$arrivals_by_station = array();
 		$station_list = getWmataData('stations');
+		$station_arrivals = getWmataData('arrivals');
 
-			foreach ($station_list->Stations as $station) {
-				$station_arrivals = getWmataData('arrivals',$station->Code);
+		foreach ($station_list->Stations as $station) {
+			$arrivals_by_station[$station->Code] = array();
+		}
 
+		// Special cleanup for WMATA "StationTogether1" aka transfer stations to combine these to one station in the feed
+		foreach ($station_arrivals->Trains as $train) {
+			if (array_key_exists($train->LocationCode, $arrivals_by_station)) {
+				switch ($train->LocationCode) {
+					case 'F01': // Gallery Pl.
+						$station_id = 'B01';
+						break;
+					case 'F03': // L'Enfant Plaza
+						$station_id = 'D03';
+						break;
+					case 'E06': // Fort Totten
+						$station_id = 'B06';
+						break;
+					case 'C01': // Metro Center
+						$station_id = 'A01';
+						break;
+					default:
+						$station_id = $train->LocationCode;
+						break;
+				}
+				array_push($arrivals_by_station[$station_id],$train);
+			}
+		}
+
+		foreach ($station_list->Stations as $station) {
+			if ($station->Code !== 'F01' && $station->Code !== 'F03' && $station->Code !== 'E06' && $station->Code !== 'C01') {
 				array_push($stations, [
 					'id' 				    => $station->Code,
 					'type' 				    => 'subway',
@@ -125,9 +154,10 @@ function getStationData($system_id) {
 					'pairedStation'			=> $station->StationTogether1,
 					'latestUpdateTime'      => time()*1000,
 					'line'					=> $station->LineCode1,
-					'trains'				=> $station_arrivals->Trains
+					'trains'				=> $arrivals_by_station[$station->Code]
 				]);
 			}
+		}
 	}
 
 	return $stations;
