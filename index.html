@@ -98,12 +98,13 @@
     <script id="subway-station-list-template" type="text/template">
       <% 
       var trainArrivalsText = [];
-      var afterTrainArrivalsText = _.after(trains.length, function() {
-        if (trainArrivalsText.length === 0) {
+      var noTrainsText = function() {
+        if (trainArrivalsText.length === 0 || trains.length === 0) {
           var text = '<span class="no-trains">No Trains Listed</span>';
           trainArrivalsText.push(text);
         }
-      });
+      }
+      var afterTrainArrivalsText = _.after(trains.length, noTrainsText);
       _.each(trains,function(train) {
         if (train.Line === 'RD' || train.Line === 'BL' || train.Line === 'YL' || train.Line === 'OR' || train.Line === 'GR' || train.Line === 'SV') {
           if (train.Min === 'BRD' || train.Min === 'ARR') {
@@ -119,9 +120,9 @@
       }); %>
       <a href="#<%= window.cabiApp.settings.activeSystemId %>" data-id="<%= id %>" class="<%= type %>">
         <div class="col-md-12">
-          <%= name %> <span class="time-distance"><% if (latestUpdateTime) { %><span class="timeago" title="<%= viewVariables.updateTime.toISOString() %>"></span>: <% } %><span class="distance-text"> <%= distance.toFixed(2) %> miles away</span></span>
+          <%= name %> <span class="time-distance"><% if (latestUpdateTime) { %><span class="timeago" title="<%= viewVariables.updateTime.toISOString() %>"></span>, <% } %><span class="distance-text"> <%= distance.toFixed(2) %> miles away</span></span>
           <div class="text <%= type %>">
-            <p><strong><%= trainArrivalsText.join(', ') %></strong></p>
+            <p><strong><%= trainArrivalsText.join('&nbsp;&nbsp;&nbsp;') %></strong></p>
           </div>
         </div><!-- END .col-md-12 -->
       </a>
