@@ -83,7 +83,7 @@
             <div class="progress-bar <%= viewVariables.listBikeClass %>" style="width: <%= viewVariables.bikePercent %>%"><img src="/img/bike.svg" alt="" /></div>
             <div class="progress-bar <%= viewVariables.listDockClass %>" style="width: <%= viewVariables.dockPercent %>%"><i class="fa fa-arrow-circle-o-down"></i></div>
           </div>
-          <div class="text">
+          <div class="text <%= type %>">
             <p><% if (viewVariables.updateTime) { %><span class="timeago" title="<%= viewVariables.updateTime.toISOString() %>"></span>: <% } %><strong><%= nbBikes %> bike<%= viewVariables.bikePlural %></strong> and <strong><%= nbEmptyDocks %> dock<%= viewVariables.dockPlural %></strong><span class="distance-text"> <%= distance.toFixed(2) %> miles away</span></p>
           </div>
         </div><!-- END .col-md-12 -->
@@ -92,6 +92,38 @@
             <h1>Station Closed</h1>
           </div>
         <% } %>
+      </a>
+    </script>
+
+    <script id="subway-station-list-template" type="text/template">
+      <% 
+      var trainArrivalsText = [];
+      var afterTrainArrivalsText = _.after(trains.length, function() {
+        if (trainArrivalsText.length === 0) {
+          var text = '<span class="no-trains">No Trains Listed</span>';
+          trainArrivalsText.push(text);
+        }
+      });
+      _.each(trains,function(train) {
+        if (train.Line === 'RD' || train.Line === 'BL' || train.Line === 'YL' || train.Line === 'OR' || train.Line === 'GR' || train.Line === 'SV') {
+          if (train.Min === 'BRD' || train.Min === 'ARR') {
+            var minutesText = '';
+          }
+          else {
+            var minutesText = parseInt(train.Min) === 1 ? ' minute' : ' minutes';
+          }
+          var text = '<span class="' + train.Line + '">' + train.DestinationName + ' (' + train.Min + minutesText + ')</span>';
+          trainArrivalsText.push(text);
+        }
+        afterTrainArrivalsText();
+      }); %>
+      <a href="#<%= window.cabiApp.settings.activeSystemId %>" data-id="<%= id %>" class="<%= type %>">
+        <div class="col-md-12">
+          <%= name %> <span class="time-distance"><% if (latestUpdateTime) { %><span class="timeago" title="<%= viewVariables.updateTime.toISOString() %>"></span>: <% } %><span class="distance-text"> <%= distance.toFixed(2) %> miles away</span></span>
+          <div class="text <%= type %>">
+            <p><strong><%= trainArrivalsText.join(', ') %></strong></p>
+          </div>
+        </div><!-- END .col-md-12 -->
       </a>
     </script>
 

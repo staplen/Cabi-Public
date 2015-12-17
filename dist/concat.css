@@ -197,11 +197,15 @@
 #station-list .station-item .progress.singular .progress-bar:first-child {
 	/*border-right: none;*/
 }
-#station-list .station-item .text {
+#station-list .station-item .text, #station-list .time-distance {
 	font-size: 16px;
 	font-weight: 100;
 	line-height: 18px;
 	padding-top: 10px;
+}
+#station-list .station-item .text.subway {
+	line-height: 29px;
+	padding-top: 0;
 }
 #station-list .station-item .text p {
 	margin-bottom: 5px;
@@ -211,6 +215,9 @@
 }
 #station-list .station-item .text strong {
 	font-weight: 300;
+}
+#station-list .station-item .text.subway strong {
+	font-weight: 700;
 }
 #station-list .station-item .text .averages {
 	font-size: 13px;
@@ -253,7 +260,27 @@
 	padding-top: 14px;
 }
 
-
+.RD {
+	border-bottom: 2px solid #f00;
+}
+.BL {
+	border-bottom: 2px solid #00f;
+}
+.YL {
+	border-bottom: 2px solid #FFF700;
+}
+.OR {
+	border-bottom: 2px solid #FF9900;
+}
+.GR {
+	border-bottom: 2px solid #0f0;
+}
+.SV {
+	border-bottom: 2px solid #8E8E8E;
+}
+.no-trains {
+	text-transform: uppercase;
+}
 
 /*
 | 
@@ -371,7 +398,7 @@
 	#stations-list-container {
 		padding: 0;
 	}
-	#station-list .station-item .text, .station-banner p.averages, .station-banner hr {
+	#station-list .station-item .text.bikeshare, .station-banner p.averages, .station-banner hr {
 		display: none;
 	}
 }

@@ -41,6 +41,7 @@ function getStationData($system_id) {
 			foreach ($xml->xpath("//station") as $station) {
 				array_push($stations, [
 					'id' 				 => $station->id,
+					'type' 				 => 'bikeshare',
 					'name' 				 => $station->name,
 					'terminalName' 		 => $station->terminalName,
 					'lastCommWithServer' => $station->lastCommWithServer,
@@ -64,6 +65,7 @@ function getStationData($system_id) {
 			foreach ($json_data->stationBeanList as $station) {
 				array_push($stations, [
 					'id' 				    => $station->id,
+					'type' 				    => 'bikeshare',
 					'name' 				    => $station->stationName,
 					'terminalName' 		    => null,
 					'lastCommWithServer'    => strtotime($station->lastCommunicationTime) * 1000,
@@ -88,6 +90,7 @@ function getStationData($system_id) {
 			foreach ($json_data->features as $station) {
 				array_push($stations, [
 					'id' 				    => $station->properties->kioskId,
+					'type' 				    => 'bikeshare',
 					'name' 				    => $station->properties->name,
 					'terminalName' 		    => null,
 					'lastCommWithServer'    => null,
@@ -115,21 +118,12 @@ function getStationData($system_id) {
 
 				array_push($stations, [
 					'id' 				    => $station->Code,
+					'type' 				    => 'subway',
 					'name' 				    => $station->Name,
-					'terminalName' 		    => null,
-					'lastCommWithServer'    => null,
 					'lat' 				    => $station->Lat,
 					'long' 				    => $station->Lon,
-					'installed' 		    => null,
-					'locked' 			    => false,
-					'installDate' 		    => null,
-					'removalDate' 		    => null,
-					'temporary' 		    => false,
-					'public' 			    => true,
-					'nbBikes' 			    => 5,
-					'nbEmptyDocks' 		    => 10,
-					'latestUpdateTime'      => null,
-					'lastCommunicationTime' => null,
+					'pairedStation'			=> $station->StationTogether1,
+					'latestUpdateTime'      => time()*1000,
 					'line'					=> $station->LineCode1,
 					'trains'				=> $station_arrivals->Trains
 				]);
