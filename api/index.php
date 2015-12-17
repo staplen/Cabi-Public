@@ -16,6 +16,7 @@ define('SYSPATH',         SYSROOT);
 /* Call config files
 ------------------------------------------------------------------*/
 require_once (CONFIG_DIR . DS . 'config.php');
+require_once (CONFIG_DIR . DS . 'config_private.php');
 require_once (CONFIG_DIR . DS . 'autoload.php');
 require_once (CONFIG_DIR . DS . 'environment.php');
 require_once (CONFIG_DIR . DS . 'locale.php');
@@ -41,6 +42,10 @@ else if ($page == 'latestxml') {
 }
 else if ($page == 'data') {
 	require_once('get_data.php');
+	exit;
+}
+else if ($page == 'wmata') {
+	require_once('wmata.php');
 	exit;
 }
 else {

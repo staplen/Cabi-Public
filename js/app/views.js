@@ -8,7 +8,8 @@ window.cabiApp.StationListView = Backbone.View.extend({
 	className: 'row station-item',
 
 	initialize: function() {
-		this.template = _.template( $('#station-list-template').html() );
+		var templateId = this.model.get('type') === 'subway' ? '#subway-station-list-template' : '#station-list-template';
+		this.template = _.template( $(templateId).html() );
 	    this.listenTo(this.model, "change", this.render);
 	},
 
@@ -58,8 +59,9 @@ window.cabiApp.StationSingleView = Backbone.View.extend({
 	},
 
 	initialize: function() {
-		this.template = _.template( $('#station-single-template').html() );
-	    this.listenTo(this.model, "change:viewVariables change:locked change:name", this.render);
+		var templateId = this.model.get('type') === 'subway' ? '#subway-station-single-template' : '#station-single-template';
+		this.template = _.template( $(templateId).html() );
+	    this.listenTo(this.model, "change:viewVariables change:locked change:name change:trains", this.render);
 	    this.render();
 	},
 
