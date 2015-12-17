@@ -5,3 +5,5 @@ _depricated
 api/data/**
 node_modules
 dist/
+
+api/config/config_private.php

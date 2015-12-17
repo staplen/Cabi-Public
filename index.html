@@ -58,7 +58,7 @@
               <h4 class="modal-title" id="myModalLabel">About Cabi Glance</h4>
             </div>
             <div class="modal-body">
-              <p>Use Cabi Glance when you're on the go and want to quickly check for Bikeshare bike and dock availability.</p>
+              <p>Use Cabi Glance when you're on the go and want to quickly check for Bikeshare bike and dock availability or DC Metro next train times.</p>
               <p>Cabi Glance is made by <a href="http://nicostaple.com" target="_blank">Nico Staple</a> in Washington, DC. Feedback welcome <a href="https://twitter.com/stapletweets" target="_blank">@StapleTweets</a> or <a href="mailto:cabi@nicostaple.com">cabi@nicostaple.com</a>.</p>
               <p>Enjoying the app and feeling generous? <a href="https://cash.me/$taple" target="_blank">https://cash.me/$taple</a></p>
             </div>
@@ -83,7 +83,7 @@
             <div class="progress-bar <%= viewVariables.listBikeClass %>" style="width: <%= viewVariables.bikePercent %>%"><img src="/img/bike.svg" alt="" /></div>
             <div class="progress-bar <%= viewVariables.listDockClass %>" style="width: <%= viewVariables.dockPercent %>%"><i class="fa fa-arrow-circle-o-down"></i></div>
           </div>
-          <div class="text">
+          <div class="text <%= type %>">
             <p><% if (viewVariables.updateTime) { %><span class="timeago" title="<%= viewVariables.updateTime.toISOString() %>"></span>: <% } %><strong><%= nbBikes %> bike<%= viewVariables.bikePlural %></strong> and <strong><%= nbEmptyDocks %> dock<%= viewVariables.dockPlural %></strong><span class="distance-text"> <%= distance.toFixed(2) %> miles away</span></p>
           </div>
         </div><!-- END .col-md-12 -->
@@ -92,6 +92,41 @@
             <h1>Station Closed</h1>
           </div>
         <% } %>
+      </a>
+    </script>
+
+    <script id="subway-station-list-template" type="text/template">
+      <% 
+      var trainArrivalsText = [];
+      var noTrainsText = function() {
+        if (trainArrivalsText.length === 0) {
+          var text = '<span class="no-trains">No Trains Listed</span>';
+          trainArrivalsText.push(text);
+        }
+      }
+      var afterTrainArrivalsText = _.after(trains.length, noTrainsText);
+      _.each(trains,function(train) {
+        if (train.Min === 'BRD' || train.Min === 'ARR') {
+          var minutesText = '';
+        }
+        else {
+          var minutesText = parseInt(train.Min) === 1 ? ' minute' : ' minutes';
+        }
+        var text = '<span class="' + train.Line + '">' + train.DestinationName + ' (' + train.Min + minutesText + ')</span>';
+        trainArrivalsText.push(text);
+        afterTrainArrivalsText();
+      });
+      if (trains.length === 0) {
+          var text = '<span class="no-trains">No Trains Listed</span>';
+          trainArrivalsText.push(text);
+      } %>
+      <a href="#<%= window.cabiApp.settings.activeSystemId %>" data-id="<%= id %>" class="<%= type %>">
+        <div class="col-md-12">
+          <%= name %> <span class="time-distance"><% if (latestUpdateTime) { %><span class="timeago" title="<%= viewVariables.updateTime.toISOString() %>"></span> <span class="seperator">&mdash;</span> <% } %><span class="distance-text"> <%= distance.toFixed(2) %> miles away</span></span>
+          <div class="text <%= type %>">
+            <p><strong><%= trainArrivalsText.join('<br>') %></strong></p>
+          </div>
+        </div><!-- END .col-md-12 -->
       </a>
     </script>
 

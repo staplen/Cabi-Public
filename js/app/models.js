@@ -5,7 +5,7 @@ window.cabiApp.Station = Backbone.Model.extend({
 	},
 
 	initialize: function() {
-		this.on("change:nbBikes change:nbEmptyDocks change:lastCommWithServer", function() {
+		this.on("change:nbBikes change:nbEmptyDocks change:lastCommWithServer change:latestUpdateTime", function() {
 			this.setViewVariables();
 		});
 		this.setViewVariables();
@@ -15,7 +15,12 @@ window.cabiApp.Station = Backbone.Model.extend({
 		var listBikeClass = 'progress-bar-success';
 		var listDockClass = 'progress-bar-success';
 		var singleBikeClass, singleDockClass;
-		var updateTime = this.get('lastCommWithServer') ? new Date(parseInt(this.get('lastCommWithServer'))) : false;
+		if (this.get('type') === 'bikeshare') {
+			var updateTime = this.get('lastCommWithServer') ? new Date(parseInt(this.get('lastCommWithServer'))) : false;
+		}
+		else {
+			var updateTime = new Date(parseInt(this.get('latestUpdateTime')));
+		}
 
 		var bikePlural = parseInt(this.get('nbBikes')) === 1 ? '' : 's';
 		var dockPlural = parseInt(this.get('nbEmptyDocks')) === 1 ? '' : 's';

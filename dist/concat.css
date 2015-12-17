@@ -164,6 +164,14 @@
 #system-list li a:hover {
 	color: rgba(0,0,0,1);
 }
+#station-list .station-item a.subway {
+	color: rgba(0,0,0,1);
+	cursor: default;
+}
+#station-list .station-item a.subway .time-distance,
+#station-list .station-item a.subway .text {
+	color: rgba(0,0,0,0.7);
+}
 #station-list .station-item span.distance, #station-list .station-item span.time {
 	background: rgba(0,0,0,0.4);
 	border-radius: 2px;
@@ -197,11 +205,15 @@
 #station-list .station-item .progress.singular .progress-bar:first-child {
 	/*border-right: none;*/
 }
-#station-list .station-item .text {
+#station-list .station-item .text, #station-list .time-distance {
 	font-size: 16px;
 	font-weight: 100;
 	line-height: 18px;
 	padding-top: 10px;
+}
+#station-list .station-item .text.subway {
+	line-height: 29px;
+	padding-top: 0;
 }
 #station-list .station-item .text p {
 	margin-bottom: 5px;
@@ -211,6 +223,9 @@
 }
 #station-list .station-item .text strong {
 	font-weight: 300;
+}
+#station-list .station-item .text.subway strong {
+	font-weight: 700;
 }
 #station-list .station-item .text .averages {
 	font-size: 13px;
@@ -253,7 +268,32 @@
 	padding-top: 14px;
 }
 
-
+.RD {
+	border-bottom: 3px solid #f00;
+}
+.BL {
+	border-bottom: 3px solid #00f;
+}
+.YL {
+	border-bottom: 3px solid #FFF700;
+}
+.OR {
+	border-bottom: 3px solid #FF9900;
+}
+.GR {
+	border-bottom: 3px solid #0f0;
+}
+.SV {
+	border-bottom: 3px solid #8E8E8E;
+}
+.--, .No {
+	border-bottom: 3px dashed #bbb;
+	color: #bbb;
+}
+.no-trains {
+	color: #bbb;
+	text-transform: uppercase;
+}
 
 /*
 | 
@@ -371,7 +411,7 @@
 	#stations-list-container {
 		padding: 0;
 	}
-	#station-list .station-item .text, .station-banner p.averages, .station-banner hr {
+	#station-list .station-item .text.bikeshare, .station-banner p.averages, .station-banner hr {
 		display: none;
 	}
 }

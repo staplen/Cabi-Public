@@ -22,6 +22,7 @@ $config['systems'] = array(
 
 	'dca' => array(
 		'id'			 => 'dca',
+		'type'			 => 'bikeshare',
 		'data_url'       => 'http://www.capitalbikeshare.com/data/stations/bikeStations.xml',
 		'location_name'  => 'Washington, DC',
 		'system_name'	 => 'Capital Bikeshare',
@@ -34,6 +35,7 @@ $config['systems'] = array(
 
 	'msp' => array(
 		'id'			 => 'msp',
+		'type'			 => 'bikeshare',
 		'data_url'       => 'https://secure.niceridemn.org/data2/bikeStations.xml',
 		'location_name'  => 'Minneapolis',
 		'system_name'	 => 'Nice Ride',
@@ -46,6 +48,7 @@ $config['systems'] = array(
 
 	'yyz' => array(
 		'id'			 => 'yyz',
+		'type'			 => 'bikeshare',
 		'data_url'       => 'http://www.bikesharetoronto.com/data/stations/bikeStations.xml',
 		'location_name'  => 'Toronto',
 		'system_name'	 => 'Bike Share Toronto',
@@ -58,6 +61,7 @@ $config['systems'] = array(
 
 	'yul' => array(
 		'id'			 => 'yul',
+		'type'			 => 'bikeshare',
 		'data_url'       => 'http://montreal.bixi.com/data/bikeStations.xml',
 		'location_name'  => 'Montreal',
 		'system_name'	 => 'BIXI',
@@ -70,6 +74,7 @@ $config['systems'] = array(
 
 	'bos' => array(
 		'id'			 => 'bos',
+		'type'			 => 'bikeshare',
 		'data_url'       => 'http://thehubway.com/data/stations/bikeStations.xml',
 		'location_name'  => 'Boston',
 		'system_name'	 => 'Hubway',
@@ -82,6 +87,7 @@ $config['systems'] = array(
 
 	'lhr' => array(
 		'id'			 => 'lhr',
+		'type'			 => 'bikeshare',
 		'data_url'       => 'http://www.tfl.gov.uk/tfl/syndication/feeds/cycle-hire/livecyclehireupdates.xml',
 		'location_name'  => 'London',
 		'system_name'	 => 'Santander Cycles',
@@ -94,6 +100,7 @@ $config['systems'] = array(
 
 	'jfk' => array(
 		'id'			 => 'jfk',
+		'type'			 => 'bikeshare',
 		'data_url'       => 'http://www.citibikenyc.com/stations/json',
 		'location_name'  => 'New York City',
 		'system_name'	 => 'Citi Bike',
@@ -107,6 +114,7 @@ $config['systems'] = array(
 
 	'ord' => array(
 		'id'			 => 'ord',
+		'type'			 => 'bikeshare',
 		'data_url'       => 'http://www.divvybikes.com/stations/json',
 		'location_name'  => 'Chicago',
 		'system_name'	 => 'Divvy',
@@ -120,6 +128,7 @@ $config['systems'] = array(
 
 	// 'mel' => array(
 	// 	'id'			 => 'mel',
+	//  'type'			 => 'bikeshare',
 	// 	'data_url'       => 'http://www.melbournebikeshare.com.au/stationmap/data',
 	// 	'location_name'  => 'Melbourne',
 	// 	'system_name'	 => 'Melbourne Bike Share',
@@ -133,6 +142,7 @@ $config['systems'] = array(
 
 	'sfo' => array(
 		'id'			 => 'sfo',
+		'type'			 => 'bikeshare',
 		'data_url'       => 'http://www.bayareabikeshare.com/stations/json',
 		'location_name'  => 'San Francisco',
 		'system_name'	 => 'Bay Area Bike Share',
@@ -146,6 +156,7 @@ $config['systems'] = array(
 
 	'phl' => array(
 		'id'			 => 'phl',
+		'type'			 => 'bikeshare',
 		'data_url'       => 'https://api.phila.gov/bike-share-stations/v1',
 		'location_name'  => 'Philadelphia',
 		'system_name'	 => 'Indego',
@@ -155,6 +166,19 @@ $config['systems'] = array(
 		'distance_units' => 'mi',
 		'country'		 => 'USA',
 		'timezone'		 => 'America/New_York'
+	),
+
+	'wmata' => array(
+		'id'			 => 'wmata',
+		'type'			 => 'subway',
+		'data_url'       => 'https://api.wmata.com/Rail.svc/json/jStations',
+		'location_name'  => 'Washington, DC',
+		'system_name'	 => 'Metro',
+		'data_format'    => 'json',
+		'lat'            => 38.907192,
+		'lon'            => -77.036871,
+		'distance_units' => 'mi',
+		'country'		 => 'USA'
 	),
 
 );
