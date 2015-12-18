@@ -158,6 +158,10 @@
 #station-list .station-item a.subway .text {
 	color: rgba(0,0,0,0.7);
 }
+#station-list .station-item a.subway .time-distance {
+	display: block;
+	font-size: 14px;
+}
 #station-list .station-item span.distance, #station-list .station-item span.time {
 	background: rgba(0,0,0,0.4);
 	border-radius: 2px;
@@ -220,6 +224,9 @@
 #station-list .station-item i {
 	color: #92EC00;
 }
+#station-list .station-item .subway i {
+	color: inherit;
+}
 #station-list .station-item path {
 	fill: #92EC00;
 }
@@ -254,6 +261,12 @@
 	padding-top: 14px;
 }
 
+.heading.subway {
+	padding-bottom: 5px;
+}
+.arriving-train .minutes {
+	/*font-weight: 200;*/
+}
 .RD {
 	border-bottom: 3px solid #f00;
 }
@@ -272,8 +285,8 @@
 .SV {
 	border-bottom: 3px solid #8E8E8E;
 }
-.--, .No {
-	border-bottom: 3px dashed #bbb;
+.NA, .No {
+	border-bottom: 1px solid #bbb;
 	color: #bbb;
 }
 .no-trains {

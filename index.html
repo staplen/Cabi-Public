@@ -106,13 +106,13 @@
       }
       var afterTrainArrivalsText = _.after(trains.length, noTrainsText);
       _.each(trains,function(train) {
-        if (train.Min === 'BRD' || train.Min === 'ARR') {
+        if (train.Min === 'BOARDING' || train.Min === 'ARRIVING') {
           var minutesText = '';
         }
         else {
           var minutesText = parseInt(train.Min) === 1 ? ' minute' : ' minutes';
         }
-        var text = '<span class="' + train.Line + '">' + train.DestinationName + ' (' + train.Min + minutesText + ')</span>';
+        var text = '<span class="arriving-train ' + train.Line + '">' + train.DestinationName + ' <span class="minutes">&ndash; ' + train.Min + minutesText + '</span></span>';
         trainArrivalsText.push(text);
         afterTrainArrivalsText();
       });
@@ -122,9 +122,10 @@
       } %>
       <a href="#<%= window.cabiApp.settings.activeSystemId %>" data-id="<%= id %>" class="<%= type %>">
         <div class="col-md-12">
-          <%= name %> <span class="time-distance"><% if (latestUpdateTime) { %><span class="timeago" title="<%= viewVariables.updateTime.toISOString() %>"></span> <span class="seperator">&mdash;</span> <% } %><span class="distance-text"> <%= distance.toFixed(2) %> miles away</span></span>
+          <div class="heading subway"><%= name %></div>
           <div class="text <%= type %>">
             <p><strong><%= trainArrivalsText.join('<br>') %></strong></p>
+            <span class="time-distance"><% if (latestUpdateTime) { %>updated <span class="timeago" title="<%= viewVariables.updateTime.toISOString() %>"></span> <span class="seperator">&ndash;</span> <% } %><span class="distance-text"> <%= distance.toFixed(2) %> miles away</span></span>
           </div>
         </div><!-- END .col-md-12 -->
       </a>

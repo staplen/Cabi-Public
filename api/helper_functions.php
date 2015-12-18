@@ -139,6 +139,18 @@ function getStationData($system_id) {
 						$station_id = $train->LocationCode;
 						break;
 				}
+				if ($train->Destination === 'Train') {
+					$train->DestinationName = 'Unknown';
+				}
+				if ($train->Min === 'ARR') {
+					$train->Min = 'ARRIVING';
+				}
+				if ($train->Min === 'BRD') {
+					$train->Min = 'BOARDING';
+				}
+				if ($train->Line === '--') {
+					$train->Line = 'NA';
+				}
 				array_push($arrivals_by_station[$station_id],$train);
 			}
 		}
