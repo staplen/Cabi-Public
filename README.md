@@ -1,5 +1,5 @@
-Cabi
+Transit Glance
 ====
 
-<h4>A Responsive Capital Bikeshare Web App</h4>
-<p>Check out the live site on any device: <a href="http://cabi.nicostaple.com" target="_blank">http://cabi.nicostaple.com</a></p>
+<p>Use Transit Glance when you're on the go and want to quickly check for Bikeshare bike and dock availability or subway next train times.</p>
+<p>Check out the live site on any device: <a href="http://transitglance.com" target="_blank">http://transitglance.com</a></p>
