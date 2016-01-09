@@ -10,10 +10,10 @@ window.cabiApp.CabiRouter = Backbone.Router.extend({
   	$('#systems-list-container').show();
   	$('#station-single-container, #geolocation-error, #stations-list-container, #loading, #cookie-found').hide();
 
-    document.title = "Cabi Glance - System List";
+    document.title = "Transit Glance - System List";
     ga('send', 'pageview', {
       'page': '/' + Backbone.history.fragment,
-      'title': "Cabi Glance - System List"
+      'title': "Transit Glance - System List"
     });
   },
 
@@ -49,10 +49,10 @@ window.cabiApp.CabiRouter = Backbone.Router.extend({
   		$('#stations-list-container').show();
   	}
 
-  	document.title = "Cabi Glance - Station List";
+  	document.title = window.cabiApp.systems.get(systemId).get('system_name') + " Station List - Transit Glance";
   	ga('send', 'pageview', {
   	  'page': '/' + Backbone.history.fragment,
-  	  'title': "Cabi Glance - Station List"
+  	  'title': window.cabiApp.systems.get(systemId).get('system_name') + " Station List - Transit Glance"
   	});
   },
 
@@ -65,7 +65,7 @@ window.cabiApp.CabiRouter = Backbone.Router.extend({
   		$('#stations-list-container, #geolocation-error, #systems-list-container, #cookie-found').hide();
   		$('#station-single-container').show();
   		window.stationId = stationId;
-  		document.title = stationModel.get('name');
+  		document.title = stationModel.get('name') + " - " + window.cabiApp.systems.get(systemId).get('system_name') + " - Transit Glance";
   		ga('send', 'pageview', {
   		  'page': '/' + Backbone.history.fragment,
   		  'title': stationModel.get('name')
