@@ -154,13 +154,17 @@
 	color: rgba(0,0,0,1);
 	cursor: default;
 }
-#station-list .station-item a.subway .time-distance,
 #station-list .station-item a.subway .text {
 	color: rgba(0,0,0,0.7);
 }
+#station-list .station-item a.subway .time-distance,
+#station-list .station-item a.subway .distance-text {
+	color: rgba(0,0,0,0.7);
+	font-size: 14px;
+	font-weight: 100;
+}
 #station-list .station-item a.subway .time-distance {
 	display: block;
-	font-size: 14px;
 }
 #station-list .station-item span.distance, #station-list .station-item span.time {
 	background: rgba(0,0,0,0.4);

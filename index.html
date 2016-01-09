@@ -124,10 +124,10 @@
       } %>
       <a href="#<%= window.cabiApp.settings.activeSystemId %>" data-id="<%= id %>" class="<%= type %>">
         <div class="col-md-12">
-          <div class="heading subway"><%= name %></div>
+          <div class="heading subway"><%= name %> <span class="distance-text"><%= distance.toFixed(2) %> miles away</span></div>
           <div class="text <%= type %>">
             <p><strong><%= trainArrivalsText.join('<br>') %></strong></p>
-            <span class="time-distance"><% if (latestUpdateTime) { %>updated <span class="timeago" title="<%= viewVariables.updateTime.toISOString() %>"></span> <span class="seperator">&ndash;</span> <% } %><span class="distance-text"> <%= distance.toFixed(2) %> miles away</span></span>
+            <!--<% if (latestUpdateTime) { %><span class="time-distance">data updated <span class="timeago" title="<%= viewVariables.updateTime.toISOString() %>"></span></span><% } %>-->
           </div>
         </div><!-- END .col-md-12 -->
       </a>
