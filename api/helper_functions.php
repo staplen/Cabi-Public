@@ -196,6 +196,12 @@ function getStationData($system_id) {
 
 			foreach ($station->xpath("etd") as $destination) {
 				foreach ($destination->xpath("estimate") as $estimate) {
+
+					$minutes = $estimate->minutes;
+					if ($minutes === 'Leaving') {
+						$minutes = 'LEAVING';
+					}
+
 					array_push($trains, [
 						'Car' 			  => $estimate->length,
 				        'Destination'     => $destination->destination,
@@ -205,7 +211,7 @@ function getStationData($system_id) {
 				        'Line'            => $estimate->color,
 				        'LocationCode'    => $station->abbr,
 				        'LocationName'    => $station->name,
-				        'Min'             => $estimate->minutes,
+				        'Min'             => $minutes,
 				        'bikeflag'        => $estimate->bikeflag,
 				        'hexcolor'        => $estimate->hexcolor,
 				        'direction'       => $estimate->direction,
@@ -213,6 +219,13 @@ function getStationData($system_id) {
 					]);
 				}
 			}
+
+			$minutes = array();
+			foreach ($trains as $key => $row) {
+				$min = $row['Min'] === 'LEAVING' ? 0 : $row['Min'];
+			    $minutes[$key] = $min;
+			}
+			array_multisort($minutes, SORT_ASC, $trains);
 
 			array_push($stations, [
 				'id' 				    => $station->abbr,
