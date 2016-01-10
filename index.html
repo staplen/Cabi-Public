@@ -108,13 +108,14 @@
       }
       var afterTrainArrivalsText = _.after(trains.length, noTrainsText);
       _.each(trains,function(train) {
-        if (train.Min === 'BOARDING' || train.Min === 'ARRIVING') {
+        if (train.Min === 'BOARDING' || train.Min === 'ARRIVING' || train.Min === 'LEAVING') {
           var minutesText = '';
         }
         else {
           var minutesText = parseInt(train.Min) === 1 ? ' minute' : ' minutes';
         }
-        var text = '<span class="arriving-train ' + train.Line + '">' + train.DestinationName + ' <span class="minutes">&ndash; ' + train.Min + minutesText + '</span></span>';
+        var lineColor = train.hexcolor ? train.hexcolor : '';
+        var text = '<span class="arriving-train ' + train.Line + '" style="border-bottom-color:' + lineColor + '">' + train.DestinationName + ' <span class="minutes">&ndash; ' + train.Min + minutesText + '</span></span>';
         trainArrivalsText.push(text);
         afterTrainArrivalsText();
       });

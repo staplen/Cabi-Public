@@ -181,4 +181,17 @@ $config['systems'] = array(
 		'country'		 => 'USA'
 	),
 
+	'bart' => array(
+		'id'			 => 'bart',
+		'type'			 => 'subway',
+		'data_url'       => 'http://api.bart.gov/api/stn.aspx',
+		'location_name'  => 'San Francisco',
+		'system_name'	 => 'BART',
+		'data_format'    => 'xml',
+		'lat'            => 37.774929,
+		'lon'            => -122.419416,
+		'distance_units' => 'mi',
+		'country'		 => 'USA'
+	),
+
 );
