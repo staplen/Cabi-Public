@@ -171,6 +171,74 @@ function getStationData($system_id) {
 			}
 		}
 	}
+	else if ($config['systems'][$system_id]['type'] === 'subway' && $config['systems'][$system_id]['id'] === 'bart') {
+		$station_info = array();
+
+		$station_list = new fXML('http://api.bart.gov/api/stn.aspx?cmd=stns&key='.$config['bart_api_key']);
+		$station_arrivals = new fXML('http://api.bart.gov/api/etd.aspx?cmd=etd&orig=ALL&key='.$config['bart_api_key']);
+
+		foreach ($station_list->xpath("stations/station") as $station) {
+			$station_info[$station->abbr] = [
+				'name' => $station->name,
+				'abbr' => $station->abbr,
+				'gtfs_latitude' => $station->gtfs_latitude,
+				'gtfs_longitude' => $station->gtfs_longitude,
+				'address' => $station->address,
+				'city' => $station->city,
+				'county' => $station->county,
+				'state' => $station->state,
+				'zipcode' => $station->zipcode
+			];
+		}
+
+		foreach ($station_arrivals->xpath("station") as $station) {
+			$trains = array();
+
+			foreach ($station->xpath("etd") as $destination) {
+				foreach ($destination->xpath("estimate") as $estimate) {
+
+					$minutes = $estimate->minutes;
+					if ($minutes === 'Leaving') {
+						$minutes = 'LEAVING';
+					}
+
+					array_push($trains, [
+						'Car' 			  => $estimate->length,
+				        'Destination'     => $destination->destination,
+				        'DestinationCode' => $destination->abbreviation,
+				        'DestinationName' => $destination->destination,
+				        'Group'           => null,
+				        'Line'            => $estimate->color,
+				        'LocationCode'    => $station->abbr,
+				        'LocationName'    => $station->name,
+				        'Min'             => $minutes,
+				        'bikeflag'        => $estimate->bikeflag,
+				        'hexcolor'        => $estimate->hexcolor,
+				        'direction'       => $estimate->direction,
+				        'platform'        => $estimate->platform
+					]);
+				}
+			}
+
+			$minutes = array();
+			foreach ($trains as $key => $row) {
+				$min = $row['Min'] === 'LEAVING' ? 0 : $row['Min'];
+			    $minutes[$key] = $min;
+			}
+			array_multisort($minutes, SORT_ASC, $trains);
+
+			array_push($stations, [
+				'id' 				    => $station->abbr,
+				'type' 				    => 'subway',
+				'name' 				    => $station->name,
+				'lat' 				    => $station_info[$station->abbr]['gtfs_latitude'],
+				'long' 				    => $station_info[$station->abbr]['gtfs_longitude'],
+				'latestUpdateTime'      => strtotime($station_arrivals->date . ' ' . $station_arrivals->time),
+				'line'					=> null,
+				'trains'				=> $trains
+			]);
+		}
+	}
 
 	return $stations;
 }

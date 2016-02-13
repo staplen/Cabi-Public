@@ -268,26 +268,26 @@
 .heading.subway {
 	padding-bottom: 5px;
 }
-.arriving-train .minutes {
-	/*font-weight: 200;*/
+.arriving-train {
+	border-bottom: 3px solid #fff;
 }
 .RD {
-	border-bottom: 3px solid #f00;
+	border-bottom-color: #f00;
 }
 .BL {
-	border-bottom: 3px solid #00f;
+	border-bottom-color: #00f;
 }
 .YL {
-	border-bottom: 3px solid #FFF700;
+	border-bottom-color: #FFF700;
 }
 .OR {
-	border-bottom: 3px solid #FF9900;
+	border-bottom-color: #FF9900;
 }
 .GR {
-	border-bottom: 3px solid #0f0;
+	border-bottom-color: #0f0;
 }
 .SV {
-	border-bottom: 3px solid #8E8E8E;
+	border-bottom-color: #8E8E8E;
 }
 .NA, .No {
 	border-bottom: 1px solid #bbb;
