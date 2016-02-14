@@ -31,7 +31,7 @@ $(function() {
     if (window.cabiApp.utils.getSystemCookie('cabi_activeSystemId') && !Backbone.history.fragment) {
       window.cabiApp.cabiRouter.navigate(window.cabiApp.utils.getSystemCookie('cabi_activeSystemId'), {trigger: true});
       $('span',window.cabiApp.settings.cookieFoundAlert).text(window.cabiApp.utils.getSystemCookie('cabi_activeSystemName'));
-      window.cabiApp.settings.cookieFoundAlert.slideDown();
+      // window.cabiApp.settings.cookieFoundAlert.slideDown();
     }
   }
 
