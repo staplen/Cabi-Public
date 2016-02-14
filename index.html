@@ -14,7 +14,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="img/ios/AppIcon.appiconset/Icon-76@2x.png" />
     <link rel="apple-touch-icon" sizes="58x58" href="img/ios/AppIcon.appiconset/Icon-Small@2x.png" />
     
-    <link href="dist/all.css" rel="stylesheet">
+    <link href="dist/all.css?v5" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -47,9 +47,10 @@
         <i class="fa fa-spinner fa-pulse"></i>
       </div>
 
-      <a href="#" class="overlay-btn info-btn" data-toggle="modal" data-target="#about-modal"><i class="fa fa-info-circle"></i></a>
-
-      <a href="#" class="overlay-btn systems-btn"><i class="fa fa-globe"></i></a>
+      <div class="overlay-btn-container">
+        <a href="#" class="overlay-btn info-btn" data-toggle="modal" data-target="#about-modal"><i class="fa fa-info-circle"></i></a>
+        <a href="#" class="overlay-btn systems-btn"><i class="fa fa-home"></i></a>
+      </div>
 
       <!-- Modal -->
       <div class="modal fade" id="about-modal" tabindex="-1" role="dialog" aria-labelledby="aboutModalLabel">
@@ -73,7 +74,7 @@
     </div>
 
     <script>window.cabiApp = {};</script>
-    <script src="dist/all.js"></script>
+    <script src="dist/all.js?v3"></script>
     <script src="api/data/systems.js"></script>
     
     <!-- Backbone templates -->

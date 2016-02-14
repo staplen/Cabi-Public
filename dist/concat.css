@@ -68,35 +68,34 @@
 }
 
 .overlay-btn {
-	position: fixed;
 	padding: 20px;
 	background: #000;
 	background: rgba(0,0,0,0.6);
 	color: #fff;
+	display: block;
 	font-size: 20px;
 	line-height: 20px;
-	z-index: 1000;
+	margin-top: 10px;
 	-webkit-transition: all 350ms ease-in-out;
 	-moz-transition: all 350ms ease-in-out;
 	-o-transition: all 350ms ease-in-out;
 	transition: all 350ms ease-in-out;
 }
+.overlay-btn:first-child {
+	margin-top: 0;
+}
 .overlay-btn:hover, .overlay-btn:focus, .overlay-btn:active, .overlay-btn:visited {
+	background: rgba(0,0,0,0.6);
 	color: #fff;
 	text-decoration: none;
 }
-.overlay-btn:hover {
-	background: #000;
-	background: rgba(0,0,0,1.0);
-}
 
-.reload-trigger, .info-btn {
-	top: 0;
+.overlay-btn-container {
+	position: fixed;
+	top: 50%;
+	margin-top: -66px;
 	right: 0;
-}
-.systems-btn {
-	top: 64px;
-	right: 0;
+	z-index: 1000;
 }
 
 .cabi-alert {

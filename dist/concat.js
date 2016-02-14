@@ -488,8 +488,21 @@ window.cabiApp.utils = {
 
 	setSystemCookie: function(systemId) {
 		var systemName = window.cabiApp.systems.findWhere({id: systemId}).get('system_name');
+		if(typeof(Storage) !== "undefined") {
+		   localStorage.setItem("cabi_activeSystemId", systemId);
+		   localStorage.setItem("cabi_activeSystemName", systemName);
+		}
 		Cookies.set('cabi_activeSystemId', systemId);
 		Cookies.set('cabi_activeSystemName', systemName);
+	},
+
+	getSystemCookie: function(cookieKey) {
+		if (typeof(Storage) !== "undefined") {
+		   return localStorage.getItem(cookieKey);
+		}
+		else {
+			return Cookies.get(cookieKey);
+		}
 	},
 
 	processHashLink: function(event) {
@@ -895,10 +908,10 @@ $(function() {
   if (!window.cabiApp.settings.appLoaded) {
     Backbone.history.start({pushState: false});
     window.cabiApp.settings.appLoaded = true;
-    if (Cookies.get('cabi_activeSystemId') && !Backbone.history.fragment) {
-      window.cabiApp.cabiRouter.navigate(Cookies.get('cabi_activeSystemId'), {trigger: true});
-      $('span',window.cabiApp.settings.cookieFoundAlert).text(Cookies.get('cabi_activeSystemName'));
-      window.cabiApp.settings.cookieFoundAlert.slideDown();
+    if (window.cabiApp.utils.getSystemCookie('cabi_activeSystemId') && !Backbone.history.fragment) {
+      window.cabiApp.cabiRouter.navigate(window.cabiApp.utils.getSystemCookie('cabi_activeSystemId'), {trigger: true});
+      $('span',window.cabiApp.settings.cookieFoundAlert).text(window.cabiApp.utils.getSystemCookie('cabi_activeSystemName'));
+      // window.cabiApp.settings.cookieFoundAlert.slideDown();
     }
   }
 
