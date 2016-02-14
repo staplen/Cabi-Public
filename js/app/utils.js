@@ -117,8 +117,21 @@ window.cabiApp.utils = {
 
 	setSystemCookie: function(systemId) {
 		var systemName = window.cabiApp.systems.findWhere({id: systemId}).get('system_name');
+		if(typeof(Storage) !== "undefined") {
+		   localStorage.setItem("cabi_activeSystemId", systemId);
+		   localStorage.setItem("cabi_activeSystemName", systemName);
+		}
 		Cookies.set('cabi_activeSystemId', systemId);
 		Cookies.set('cabi_activeSystemName', systemName);
+	},
+
+	getSystemCookie: function(cookieKey) {
+		if (typeof(Storage) !== "undefined") {
+		   return localStorage.getItem(cookieKey);
+		}
+		else {
+			return Cookies.get(cookieKey);
+		}
 	},
 
 	processHashLink: function(event) {
