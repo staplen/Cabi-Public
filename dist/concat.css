@@ -69,20 +69,17 @@
 
 .overlay-btn {
 	padding: 20px;
+	position: fixed;
 	background: #000;
 	background: rgba(0,0,0,0.6);
 	color: #fff;
-	display: block;
 	font-size: 20px;
 	line-height: 20px;
-	margin-top: 10px;
+	z-index: 1000;
 	-webkit-transition: all 350ms ease-in-out;
 	-moz-transition: all 350ms ease-in-out;
 	-o-transition: all 350ms ease-in-out;
 	transition: all 350ms ease-in-out;
-}
-.overlay-btn:first-child {
-	margin-top: 0;
 }
 .overlay-btn:hover, .overlay-btn:focus, .overlay-btn:active, .overlay-btn:visited {
 	background: rgba(0,0,0,0.6);
@@ -96,6 +93,14 @@
 	margin-top: -66px;
 	right: 0;
 	z-index: 1000;
+}
+.overlay-btn-container .overlay-btn {
+	margin-top: 10px;
+	position: static;
+	display: block;
+}
+.overlay-btn-container .overlay-btn:first-child {
+	margin-top: 0;
 }
 
 .cabi-alert {
